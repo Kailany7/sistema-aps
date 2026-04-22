@@ -11,6 +11,10 @@ conectarBanco();
 app.use(cors());
 app.use(express.json());
 
+// Rotas
+const userRoutes = require('./routes/user.routes');
+app.use('/usuarios', userRoutes);
+
 
 app.get('/', (req, res) => {
   res.json({ mensagem: 'API Gestão de Alto Risco funcionando' });
