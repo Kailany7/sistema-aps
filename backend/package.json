@@ -2,7 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Sistema APS Backend",
-  "main": "dist/index.js",
+  "main": "src/app.js",
   "scripts": {
     "dev": "ts-node src/index.js",
     "build": "tsc",
@@ -14,7 +14,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.22.0",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
