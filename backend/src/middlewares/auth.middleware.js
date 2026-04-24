@@ -13,8 +13,8 @@ module.exports = (req, res, next) => {
 };
 
 // Como usar nas rotas da Kailany e Leticia:
-const auth = require("../middleware/auth");
+/*const auth = require("../middleware/auth");
 router.post("/gestantes", auth, async (req, res) => {
   const usuario_id = req.user.id; // <- pega o id de quem está logado
   // ...
-});
+});/*/
