@@ -8,6 +8,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const mongoose = require("mongoose");
+
+mongoose
+  .connect(process.env.DATABASE_URL)
+  .then(() => console.log("✅ MongoDB conectado"))
+  .catch((err) => console.error("❌ Erro MongoDB:", err));
+
 // ── Swagger UI ────────────────────────────────────────────────
 app.use(
   "/api-docs",
