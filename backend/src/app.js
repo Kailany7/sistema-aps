@@ -26,6 +26,13 @@ app.get("/api-docs.json", (req, res) => {
   res.send(swaggerSpec);
 });
 
+const mongoose = require("mongoose");
+
+mongoose
+  .connect(process.env.DATABASE_URL)
+  .then(() => console.log("✅ MongoDB conectado"))
+  .catch((err) => console.error("❌ Erro MongoDB:", err));
+
 // ── Rotas ─────────────────────────────────────────────────────
 const authRoutes = require("./routes/auth.routes");
 const gestanteRoutes = require("./routes/gestante.routes");
