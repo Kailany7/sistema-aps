@@ -17,6 +17,7 @@ const consultaSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
+// DADOS PESSOAIS
 const gestanteSchema = new mongoose.Schema({
   nome: { type: String, required: true, trim: true },
 
@@ -35,6 +36,8 @@ const gestanteSchema = new mongoose.Schema({
   endereco: String,
   numeroCartaoSus: String,
 
+  // Dados da gestação
+
   semanasGestacao: { type: Number, required: true },
   dataUltimaMenstruacao: Date,
   dataProvavelParto: Date,
@@ -42,6 +45,8 @@ const gestanteSchema = new mongoose.Schema({
   numGestacoes: { type: Number, default: 0 },
   numPartos: { type: Number, default: 0 },
   numAbortos: { type: Number, default: 0 },
+
+  // Dados clínicos
 
   resumoClinico: String,
   historicoDoencas: String,
@@ -52,9 +57,11 @@ const gestanteSchema = new mongoose.Schema({
     default: 'habitual'
   },
 
+  // Unidade de saúde
   unidadeSaude: { type: String, required: true },
   profissionalResponsavel: String,
 
+  //Documentos anexados (preenchido pelo multer) 
   documentos: [
     {
       nome: String,
@@ -64,12 +71,18 @@ const gestanteSchema = new mongoose.Schema({
     }
   ],
 
+  // RELACIONAMENTO 1 - N COM USUARIO
+  // Uma gestante é cadastrada por um usuário (profissional de saúde)
+  // O usuario_id vem do token JWT após o login
   usuario_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-
+  // RELACIONAMENTO 1 - N COM CONSULTA (EMBUTIDO)
+  // Uma gestante tem muitas consultas
+  // As consultas ficam dentro do documento da gestante como array
+  // Não precisa buscar em outra coleção — já vem junto
   consultas: [consultaSchema]
 
 }, { timestamps: true });
