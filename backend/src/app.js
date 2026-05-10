@@ -2,8 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
-const conectarBanco = require('./config/db');
-const { port } = require('./config/env');
+const conectarBanco = require("./config/db");
+const { port } = require("./config/env");
 
 const app = express();
 
@@ -18,13 +18,13 @@ const authRoutes = require("./routes/auth.routes");
 const gestanteRoutes = require("./routes/gestante.routes");
 const referenciaRoutes = require("./routes/referencia.routes");
 const contrarrefRoutes = require("./routes/contrarref.routes");
-const userRoutes = require('./routes/user.routes');
+const userRoutes = require("./routes/user.routes");
 
 app.use("/auth", authRoutes);
 app.use("/gestantes", gestanteRoutes);
-app.use("/referencias", referenciaRoutes);
+app.use("/encaminhamentos", referenciaRoutes);
 app.use("/contrarreferencias", contrarrefRoutes);
-app.use('/usuarios', userRoutes);
+app.use("/usuarios", userRoutes);
 
 // ── Swagger UI ────────────────────────────────────────────────
 app.use(
