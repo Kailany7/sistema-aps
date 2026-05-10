@@ -77,7 +77,7 @@ const gestanteSchema = new mongoose.Schema({
   usuario_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    //required: true,
   },
   // RELACIONAMENTO 1 - N COM CONSULTA (EMBUTIDO)
   // Uma gestante tem muitas consultas
