@@ -366,6 +366,10 @@ const options = {
         name: "Contra-referências",
         description: "Retorno da atenção especializada para a UBS",
       },
+      {
+        name: "Relatórios",
+        description: "Dados agregados para dashboard e exportação",
+      },
     ],
     paths: {
       // ── AUTH ──────────────────────────────────────────────────
@@ -1214,6 +1218,211 @@ const options = {
             },
             401: {
               description: "Não autorizado",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+          },
+        },
+      },
+
+      // ── RELATÓRIOS ────────────────────────────────────────────
+      "/relatorios/gestantes": {
+        get: {
+          tags: ["Relatórios"],
+          summary: "Relatório de gestantes por risco e por UBS",
+          security: [{ bearerAuth: [] }],
+          parameters: [
+            {
+              name: "unidadeSaude",
+              in: "query",
+              description: "Filtrar por unidade de saúde",
+              schema: { type: "string", example: "UBS Centro" },
+            },
+            {
+              name: "dataInicio",
+              in: "query",
+              description: "Data início (YYYY-MM-DD)",
+              schema: { type: "string", format: "date", example: "2024-01-01" },
+            },
+            {
+              name: "dataFim",
+              in: "query",
+              description: "Data fim (YYYY-MM-DD)",
+              schema: { type: "string", format: "date", example: "2024-12-31" },
+            },
+          ],
+          responses: {
+            200: {
+              description: "Relatório gerado com sucesso",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean", example: true },
+                      totalGeral: { type: "integer", example: 127 },
+                      porRisco: {
+                        type: "array",
+                        items: {
+                          type: "object",
+                          properties: {
+                            _id: {
+                              type: "string",
+                              enum: ["alto", "medio", "baixo", "habitual"],
+                              example: "alto",
+                            },
+                            total: { type: "integer", example: 43 },
+                          },
+                        },
+                      },
+                      porUbs: {
+                        type: "array",
+                        items: {
+                          type: "object",
+                          properties: {
+                            _id: { type: "string", example: "UBS Centro" },
+                            total: { type: "integer", example: 30 },
+                            altoRisco: { type: "integer", example: 10 },
+                            medioRisco: { type: "integer", example: 8 },
+                            baixoRisco: { type: "integer", example: 7 },
+                            habitual: { type: "integer", example: 5 },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            401: {
+              description: "Não autorizado",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+            500: {
+              description: "Erro interno",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+          },
+        },
+      },
+
+      "/relatorios/encaminhamentos": {
+        get: {
+          tags: ["Relatórios"],
+          summary: "Relatório de encaminhamentos por período",
+          security: [{ bearerAuth: [] }],
+          parameters: [
+            {
+              name: "status",
+              in: "query",
+              description: "Filtrar por status",
+              schema: {
+                type: "string",
+                enum: ["pendente", "agendado", "realizado", "cancelado"],
+              },
+            },
+            {
+              name: "especialidade",
+              in: "query",
+              description: "Filtrar por especialidade",
+              schema: { type: "string", example: "Cardiologia" },
+            },
+            {
+              name: "dataInicio",
+              in: "query",
+              description: "Data início (YYYY-MM-DD)",
+              schema: { type: "string", format: "date", example: "2024-01-01" },
+            },
+            {
+              name: "dataFim",
+              in: "query",
+              description: "Data fim (YYYY-MM-DD)",
+              schema: { type: "string", format: "date", example: "2024-12-31" },
+            },
+          ],
+          responses: {
+            200: {
+              description: "Relatório gerado com sucesso",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean", example: true },
+                      totalGeral: { type: "integer", example: 58 },
+                      porStatus: {
+                        type: "array",
+                        items: {
+                          type: "object",
+                          properties: {
+                            _id: {
+                              type: "string",
+                              enum: [
+                                "pendente",
+                                "agendado",
+                                "realizado",
+                                "cancelado",
+                              ],
+                              example: "pendente",
+                            },
+                            total: { type: "integer", example: 20 },
+                          },
+                        },
+                      },
+                      porEspecialidade: {
+                        type: "array",
+                        items: {
+                          type: "object",
+                          properties: {
+                            _id: { type: "string", example: "Cardiologia" },
+                            total: { type: "integer", example: 15 },
+                            pendentes: { type: "integer", example: 5 },
+                            realizados: { type: "integer", example: 10 },
+                          },
+                        },
+                      },
+                      porPeriodo: {
+                        type: "array",
+                        items: {
+                          type: "object",
+                          properties: {
+                            _id: {
+                              type: "object",
+                              properties: {
+                                ano: { type: "integer", example: 2024 },
+                                mes: { type: "integer", example: 6 },
+                              },
+                            },
+                            total: { type: "integer", example: 12 },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            401: {
+              description: "Não autorizado",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+            500: {
+              description: "Erro interno",
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/Error" },

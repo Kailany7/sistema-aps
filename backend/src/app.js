@@ -19,12 +19,14 @@ const gestanteRoutes = require("./routes/gestante.routes");
 const referenciaRoutes = require("./routes/referencia.routes");
 const contrarrefRoutes = require("./routes/contrarref.routes");
 const userRoutes = require("./routes/user.routes");
+const relatorioRoutes = require("./routes/relatorio.routes");
 
 app.use("/auth", authRoutes);
 app.use("/gestantes", gestanteRoutes);
 app.use("/encaminhamentos", referenciaRoutes);
 app.use("/contrarreferencias", contrarrefRoutes);
 app.use("/usuarios", userRoutes);
+app.use("/relatorios", relatorioRoutes);
 
 // ── Swagger UI ────────────────────────────────────────────────
 app.use(
