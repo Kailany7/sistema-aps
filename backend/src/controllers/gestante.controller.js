@@ -1,7 +1,7 @@
 const service = require('../services/gestante.service');
 
 // CREATE
-exports.create = async (req, res) => {
+/*exports.create = async (req, res) => {
   try {
     const gestante = await service.createGestante(req.body, req.user.id);
 
@@ -9,6 +9,29 @@ exports.create = async (req, res) => {
 
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};*/
+
+//create para testar sem token
+
+exports.create = async (req, res) => {
+  try {
+    const userId = req.user?.id || null;
+
+    const gestante = await service.createGestante(
+      req.body,
+      userId
+    );
+
+    res.status(201).json({
+      success: true,
+      data: gestante,
+    });
+
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+    });
   }
 };
 
