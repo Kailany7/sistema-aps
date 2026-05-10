@@ -8,9 +8,7 @@ const options = {
       version: "1.0.0",
       description:
         "API para gerenciamento de gestantes e fluxo de referência/contrarreferência na Atenção Primária à Saúde (APS).",
-      contact: {
-        name: "Sistema APS",
-      },
+      contact: { name: "Sistema APS" },
     },
     servers: [
       {
@@ -57,7 +55,6 @@ const options = {
             },
           },
         },
-
         LoginInput: {
           type: "object",
           required: ["email", "password"],
@@ -74,7 +71,6 @@ const options = {
             },
           },
         },
-
         AuthResponse: {
           type: "object",
           properties: {
@@ -117,7 +113,6 @@ const options = {
             },
           },
         },
-
         Usuario: {
           type: "object",
           properties: {
@@ -156,7 +151,6 @@ const options = {
             },
           },
         },
-
         Gestante: {
           type: "object",
           properties: {
@@ -181,6 +175,171 @@ const options = {
           },
         },
 
+        // ── Encaminhamento ───────────────────────────────────────
+        EncaminhamentoInput: {
+          type: "object",
+          required: ["especialidade", "gestante_id"],
+          properties: {
+            gestante_id: {
+              type: "string",
+              example: "664f1a2b3c4d5e6f7a8b9c0d",
+            },
+            especialidade: { type: "string", example: "Cardiologia" },
+            motivo: {
+              type: "string",
+              example: "Hipertensão gestacional severa",
+            },
+            estratificacao_risco: {
+              type: "string",
+              example: "Alto risco — mudança de classificação",
+            },
+            cid10: { type: "string", example: "O14.1" },
+            profissional_encaminhador: {
+              type: "object",
+              properties: {
+                nome: { type: "string", example: "Dr. Carlos Lima" },
+                crm: { type: "string", example: "CRM-PB 12345" },
+              },
+            },
+            ubs_origem: {
+              type: "object",
+              properties: {
+                nome: { type: "string", example: "UBS Centro" },
+                acs_responsavel: {
+                  type: "string",
+                  example: "Maria das Graças",
+                },
+              },
+            },
+            arquivos: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  nome: { type: "string", example: "cartao_gestante.pdf" },
+                  url: {
+                    type: "string",
+                    example: "https://storage.exemplo.com/arquivo.pdf",
+                  },
+                },
+              },
+            },
+          },
+        },
+        Encaminhamento: {
+          type: "object",
+          properties: {
+            _id: { type: "string", example: "664f1a2b3c4d5e6f7a8b9c0d" },
+            especialidade: { type: "string", example: "Cardiologia" },
+            motivo: {
+              type: "string",
+              example: "Hipertensão gestacional severa",
+            },
+            estratificacao_risco: { type: "string", example: "Alto risco" },
+            cid10: { type: "string", example: "O14.1" },
+            status: {
+              type: "string",
+              enum: ["pendente", "agendado", "realizado", "cancelado"],
+              example: "pendente",
+            },
+            data_solicitacao: {
+              type: "string",
+              format: "date-time",
+              example: "2024-06-01T10:00:00.000Z",
+            },
+            data_consulta: {
+              type: "string",
+              format: "date-time",
+              example: "2024-06-15T09:00:00.000Z",
+            },
+            gestante_id: {
+              type: "string",
+              example: "664f1a2b3c4d5e6f7a8b9c0d",
+            },
+            usuario_id: { type: "string", example: "664f1a2b3c4d5e6f7a8b9c0e" },
+          },
+        },
+
+        // ── Contra-referência ────────────────────────────────────
+        ContrarrefInput: {
+          type: "object",
+          required: ["referencia_id"],
+          properties: {
+            referencia_id: {
+              type: "string",
+              example: "664f1a2b3c4d5e6f7a8b9c0d",
+            },
+            conduta_tomada: {
+              type: "string",
+              example: "Medicação ajustada, repouso prescrito",
+            },
+            plano_acompanhamento: {
+              type: "string",
+              example: "Retorno quinzenal à UBS",
+            },
+            relatorio_alta: {
+              type: "string",
+              example: "Paciente estabilizada, sem risco imediato",
+            },
+            cid10: { type: "string", example: "O14.1" },
+            contato: {
+              type: "object",
+              properties: {
+                nome: { type: "string", example: "Dra. Ana Souza" },
+                telefone: { type: "string", example: "(83) 99999-1111" },
+              },
+            },
+            ubs_origem: {
+              type: "object",
+              properties: {
+                nome: { type: "string", example: "UBS Centro" },
+                acs_responsavel: {
+                  type: "string",
+                  example: "Maria das Graças",
+                },
+              },
+            },
+            profissional_responsavel: {
+              type: "object",
+              properties: {
+                nome: { type: "string", example: "Dr. Roberto Alves" },
+                crm: { type: "string", example: "CRM-PB 54321" },
+              },
+            },
+            status_gestante: {
+              type: "string",
+              enum: ["estavel", "atencao", "critico"],
+              example: "estavel",
+            },
+          },
+        },
+        Contrarref: {
+          type: "object",
+          properties: {
+            _id: { type: "string", example: "664f1a2b3c4d5e6f7a8b9c0d" },
+            conduta_tomada: { type: "string", example: "Medicação ajustada" },
+            plano_acompanhamento: {
+              type: "string",
+              example: "Retorno quinzenal",
+            },
+            status_gestante: {
+              type: "string",
+              enum: ["estavel", "atencao", "critico"],
+              example: "estavel",
+            },
+            data_retorno: {
+              type: "string",
+              format: "date-time",
+              example: "2024-06-20T10:00:00.000Z",
+            },
+            referencia_id: {
+              type: "string",
+              example: "664f1a2b3c4d5e6f7a8b9c0d",
+            },
+            usuario_id: { type: "string", example: "664f1a2b3c4d5e6f7a8b9c0e" },
+          },
+        },
+
         // ── Genéricos ────────────────────────────────────────────
         Error: {
           type: "object",
@@ -200,18 +359,16 @@ const options = {
       },
       { name: "Gestantes", description: "Cadastro e gestão de gestantes" },
       {
-        name: "Referências",
-        description: "Encaminhamentos para outras unidades",
+        name: "Encaminhamentos",
+        description: "Encaminhamento da UBS para especialista",
       },
       {
-        name: "Contrarreferências",
-        description: "Retorno das gestantes encaminhadas",
+        name: "Contra-referências",
+        description: "Retorno da atenção especializada para a UBS",
       },
     ],
     paths: {
-      // ═══════════════════════════════════════════════════════════
-      // AUTH
-      // ═══════════════════════════════════════════════════════════
+      // ── AUTH ──────────────────────────────────────────────────
       "/auth/register": {
         post: {
           tags: ["Auth"],
@@ -253,7 +410,6 @@ const options = {
           },
         },
       },
-
       "/auth/login": {
         post: {
           tags: ["Auth"],
@@ -288,9 +444,7 @@ const options = {
         },
       },
 
-      // ═══════════════════════════════════════════════════════════
-      // USUÁRIOS
-      // ═══════════════════════════════════════════════════════════
+      // ── USUÁRIOS ──────────────────────────────────────────────
       "/usuarios": {
         post: {
           tags: ["Usuários"],
@@ -322,7 +476,7 @@ const options = {
               },
             },
             500: {
-              description: "Erro interno do servidor",
+              description: "Erro interno",
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/Error" },
@@ -331,7 +485,6 @@ const options = {
             },
           },
         },
-
         get: {
           tags: ["Usuários"],
           summary: "Listar todos os profissionais de saúde",
@@ -349,7 +502,7 @@ const options = {
               },
             },
             500: {
-              description: "Erro interno do servidor",
+              description: "Erro interno",
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/Error" },
@@ -360,9 +513,7 @@ const options = {
         },
       },
 
-      // ═══════════════════════════════════════════════════════════
-      // GESTANTES
-      // ═══════════════════════════════════════════════════════════
+      // ── GESTANTES ─────────────────────────────────────────────
       "/gestantes": {
         post: {
           tags: ["Gestantes"],
@@ -378,7 +529,7 @@ const options = {
           },
           responses: {
             201: {
-              description: "Gestante cadastrada com sucesso",
+              description: "Gestante cadastrada",
               content: {
                 "application/json": {
                   schema: {
@@ -400,7 +551,7 @@ const options = {
               },
             },
             401: {
-              description: "Não autorizado — token ausente ou inválido",
+              description: "Não autorizado",
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/Error" },
@@ -409,7 +560,6 @@ const options = {
             },
           },
         },
-
         get: {
           tags: ["Gestantes"],
           summary: "Listar todas as gestantes",
@@ -418,19 +568,16 @@ const options = {
             {
               name: "page",
               in: "query",
-              description: "Número da página",
               schema: { type: "integer", example: 1 },
             },
             {
               name: "limit",
               in: "query",
-              description: "Quantidade de registros por página",
               schema: { type: "integer", example: 10 },
             },
             {
               name: "nome",
               in: "query",
-              description: "Filtrar por nome",
               schema: { type: "string", example: "Ana" },
             },
           ],
@@ -448,7 +595,6 @@ const options = {
                         items: { $ref: "#/components/schemas/Gestante" },
                       },
                       total: { type: "integer", example: 42 },
-                      page: { type: "integer", example: 1 },
                     },
                   },
                 },
@@ -462,18 +608,9 @@ const options = {
                 },
               },
             },
-            500: {
-              description: "Erro interno do servidor",
-              content: {
-                "application/json": {
-                  schema: { $ref: "#/components/schemas/Error" },
-                },
-              },
-            },
           },
         },
       },
-
       "/gestantes/{id}": {
         get: {
           tags: ["Gestantes"],
@@ -484,7 +621,6 @@ const options = {
               name: "id",
               in: "path",
               required: true,
-              description: "ID da gestante (MongoDB ObjectId)",
               schema: { type: "string", example: "664f1a2b3c4d5e6f7a8b9c0d" },
             },
           ],
@@ -521,7 +657,6 @@ const options = {
             },
           },
         },
-
         put: {
           tags: ["Gestantes"],
           summary: "Atualizar dados de uma gestante",
@@ -531,7 +666,6 @@ const options = {
               name: "id",
               in: "path",
               required: true,
-              description: "ID da gestante (MongoDB ObjectId)",
               schema: { type: "string", example: "664f1a2b3c4d5e6f7a8b9c0d" },
             },
           ],
@@ -545,7 +679,7 @@ const options = {
           },
           responses: {
             200: {
-              description: "Gestante atualizada com sucesso",
+              description: "Gestante atualizada",
               content: {
                 "application/json": {
                   schema: {
@@ -553,6 +687,89 @@ const options = {
                     properties: {
                       success: { type: "boolean", example: true },
                       data: { $ref: "#/components/schemas/Gestante" },
+                    },
+                  },
+                },
+              },
+            },
+            401: {
+              description: "Não autorizado",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+            404: {
+              description: "Não encontrada",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+          },
+        },
+        delete: {
+          tags: ["Gestantes"],
+          summary: "Remover gestante",
+          security: [{ bearerAuth: [] }],
+          parameters: [
+            {
+              name: "id",
+              in: "path",
+              required: true,
+              schema: { type: "string", example: "664f1a2b3c4d5e6f7a8b9c0d" },
+            },
+          ],
+          responses: {
+            200: {
+              description: "Gestante removida",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: { success: { type: "boolean", example: true } },
+                  },
+                },
+              },
+            },
+            401: {
+              description: "Não autorizado",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+          },
+        },
+      },
+
+      // ── ENCAMINHAMENTOS ───────────────────────────────────────
+      "/encaminhamentos": {
+        post: {
+          tags: ["Encaminhamentos"],
+          summary: "Criar novo encaminhamento",
+          security: [{ bearerAuth: [] }],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/EncaminhamentoInput" },
+              },
+            },
+          },
+          responses: {
+            201: {
+              description: "Encaminhamento criado",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean", example: true },
+                      data: { $ref: "#/components/schemas/Encaminhamento" },
                     },
                   },
                 },
@@ -574,8 +791,56 @@ const options = {
                 },
               },
             },
-            404: {
-              description: "Gestante não encontrada",
+          },
+        },
+        get: {
+          tags: ["Encaminhamentos"],
+          summary: "Listar encaminhamentos",
+          security: [{ bearerAuth: [] }],
+          parameters: [
+            {
+              name: "status",
+              in: "query",
+              schema: {
+                type: "string",
+                enum: ["pendente", "agendado", "realizado", "cancelado"],
+              },
+            },
+            { name: "gestante_id", in: "query", schema: { type: "string" } },
+            {
+              name: "dataInicio",
+              in: "query",
+              description: "Formato YYYY-MM-DD",
+              schema: { type: "string", format: "date" },
+            },
+            {
+              name: "dataFim",
+              in: "query",
+              description: "Formato YYYY-MM-DD",
+              schema: { type: "string", format: "date" },
+            },
+          ],
+          responses: {
+            200: {
+              description: "Lista de encaminhamentos",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean", example: true },
+                      total: { type: "integer", example: 10 },
+                      data: {
+                        type: "array",
+                        items: { $ref: "#/components/schemas/Encaminhamento" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            401: {
+              description: "Não autorizado",
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/Error" },
@@ -584,36 +849,173 @@ const options = {
             },
           },
         },
-
-        delete: {
-          tags: ["Gestantes"],
-          summary: "Remover gestante",
+      },
+      "/encaminhamentos/{id}": {
+        get: {
+          tags: ["Encaminhamentos"],
+          summary: "Buscar encaminhamento por ID",
           security: [{ bearerAuth: [] }],
           parameters: [
             {
               name: "id",
               in: "path",
               required: true,
-              description: "ID da gestante (MongoDB ObjectId)",
               schema: { type: "string", example: "664f1a2b3c4d5e6f7a8b9c0d" },
             },
           ],
           responses: {
             200: {
-              description: "Gestante removida com sucesso",
+              description: "Encaminhamento encontrado",
               content: {
                 "application/json": {
                   schema: {
                     type: "object",
                     properties: {
                       success: { type: "boolean", example: true },
+                      data: { $ref: "#/components/schemas/Encaminhamento" },
+                    },
+                  },
+                },
+              },
+            },
+            401: {
+              description: "Não autorizado",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+            404: {
+              description: "Não encontrado",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+          },
+        },
+        put: {
+          tags: ["Encaminhamentos"],
+          summary: "Atualizar encaminhamento",
+          security: [{ bearerAuth: [] }],
+          parameters: [
+            {
+              name: "id",
+              in: "path",
+              required: true,
+              schema: { type: "string", example: "664f1a2b3c4d5e6f7a8b9c0d" },
+            },
+          ],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/EncaminhamentoInput" },
+              },
+            },
+          },
+          responses: {
+            200: {
+              description: "Encaminhamento atualizado",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean", example: true },
+                      data: { $ref: "#/components/schemas/Encaminhamento" },
+                    },
+                  },
+                },
+              },
+            },
+            401: {
+              description: "Não autorizado",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+            404: {
+              description: "Não encontrado",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+          },
+        },
+        delete: {
+          tags: ["Encaminhamentos"],
+          summary: "Remover encaminhamento",
+          security: [{ bearerAuth: [] }],
+          parameters: [
+            {
+              name: "id",
+              in: "path",
+              required: true,
+              schema: { type: "string", example: "664f1a2b3c4d5e6f7a8b9c0d" },
+            },
+          ],
+          responses: {
+            200: {
+              description: "Encaminhamento removido",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: { success: { type: "boolean", example: true } },
+                  },
+                },
+              },
+            },
+            401: {
+              description: "Não autorizado",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+          },
+        },
+      },
+
+      // ── CONTRA-REFERÊNCIAS ────────────────────────────────────
+      "/contrarreferencias": {
+        post: {
+          tags: ["Contra-referências"],
+          summary: "Registrar contra-referência (retorno do especialista)",
+          security: [{ bearerAuth: [] }],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/ContrarrefInput" },
+              },
+            },
+          },
+          responses: {
+            201: {
+              description: "Contra-referência registrada",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean", example: true },
+                      data: { $ref: "#/components/schemas/Contrarref" },
                     },
                   },
                 },
               },
             },
             400: {
-              description: "Erro ao remover",
+              description: "Dados inválidos",
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/Error" },
@@ -630,17 +1032,197 @@ const options = {
             },
           },
         },
+        get: {
+          tags: ["Contra-referências"],
+          summary: "Listar contra-referências",
+          security: [{ bearerAuth: [] }],
+          parameters: [
+            {
+              name: "status_gestante",
+              in: "query",
+              schema: {
+                type: "string",
+                enum: ["estavel", "atencao", "critico"],
+              },
+            },
+            { name: "referencia_id", in: "query", schema: { type: "string" } },
+            {
+              name: "dataInicio",
+              in: "query",
+              description: "Formato YYYY-MM-DD",
+              schema: { type: "string", format: "date" },
+            },
+            {
+              name: "dataFim",
+              in: "query",
+              description: "Formato YYYY-MM-DD",
+              schema: { type: "string", format: "date" },
+            },
+          ],
+          responses: {
+            200: {
+              description: "Lista de contra-referências",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean", example: true },
+                      total: { type: "integer", example: 5 },
+                      data: {
+                        type: "array",
+                        items: { $ref: "#/components/schemas/Contrarref" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            401: {
+              description: "Não autorizado",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+          },
+        },
       },
-
-      // ═══════════════════════════════════════════════════════════
-      // REFERÊNCIAS — rotas ainda sem implementação (placeholder)
-      // ═══════════════════════════════════════════════════════════
-      "/referencias": {},
-
-      // ═══════════════════════════════════════════════════════════
-      // CONTRARREFERÊNCIAS — rotas ainda sem implementação (placeholder)
-      // ═══════════════════════════════════════════════════════════
-      "/contrarreferencias": {},
+      "/contrarreferencias/{id}": {
+        get: {
+          tags: ["Contra-referências"],
+          summary: "Buscar contra-referência por ID",
+          security: [{ bearerAuth: [] }],
+          parameters: [
+            {
+              name: "id",
+              in: "path",
+              required: true,
+              schema: { type: "string", example: "664f1a2b3c4d5e6f7a8b9c0d" },
+            },
+          ],
+          responses: {
+            200: {
+              description: "Contra-referência encontrada",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean", example: true },
+                      data: { $ref: "#/components/schemas/Contrarref" },
+                    },
+                  },
+                },
+              },
+            },
+            401: {
+              description: "Não autorizado",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+            404: {
+              description: "Não encontrada",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+          },
+        },
+        put: {
+          tags: ["Contra-referências"],
+          summary: "Atualizar contra-referência",
+          security: [{ bearerAuth: [] }],
+          parameters: [
+            {
+              name: "id",
+              in: "path",
+              required: true,
+              schema: { type: "string", example: "664f1a2b3c4d5e6f7a8b9c0d" },
+            },
+          ],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/ContrarrefInput" },
+              },
+            },
+          },
+          responses: {
+            200: {
+              description: "Contra-referência atualizada",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean", example: true },
+                      data: { $ref: "#/components/schemas/Contrarref" },
+                    },
+                  },
+                },
+              },
+            },
+            401: {
+              description: "Não autorizado",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+            404: {
+              description: "Não encontrada",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+          },
+        },
+        delete: {
+          tags: ["Contra-referências"],
+          summary: "Remover contra-referência",
+          security: [{ bearerAuth: [] }],
+          parameters: [
+            {
+              name: "id",
+              in: "path",
+              required: true,
+              schema: { type: "string", example: "664f1a2b3c4d5e6f7a8b9c0d" },
+            },
+          ],
+          responses: {
+            200: {
+              description: "Contra-referência removida",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: { success: { type: "boolean", example: true } },
+                  },
+                },
+              },
+            },
+            401: {
+              description: "Não autorizado",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   },
   apis: [],
