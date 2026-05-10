@@ -1,6 +1,6 @@
-const ContraRef = require('../models/contrarref');
-const Referencia = require('../models/Referencia');
-const mongoose = require('mongoose');
+const ContraRef = require("../models/Contrarref");
+const Referencia = require("../models/Referencia");
+const mongoose = require("mongoose");
 
 // CREATE
 exports.createContraRef = async (data, userId) => {
@@ -12,12 +12,7 @@ exports.createContraRef = async (data, userId) => {
 
 // GET ALL
 exports.getContraRefs = async (query) => {
-  const {
-    cid10,
-    statusGestante,
-    page = 1,
-    limit = 10,
-  } = query;
+  const { cid10, statusGestante, page = 1, limit = 10 } = query;
 
   const filtro = {};
 
@@ -25,7 +20,7 @@ exports.getContraRefs = async (query) => {
   if (cid10) {
     filtro.cid10 = {
       $regex: cid10,
-      $options: 'i',
+      $options: "i",
     };
   }
 
@@ -40,8 +35,8 @@ exports.getContraRefs = async (query) => {
 
   const [contraRefs, total] = await Promise.all([
     ContraRef.find(filtro)
-      .populate('referenciaId')
-      .populate('usuarioId', 'nome login')
+      .populate("referenciaId")
+      .populate("usuarioId", "nome login")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limitNumber),
@@ -60,15 +55,15 @@ exports.getContraRefs = async (query) => {
 exports.getContraRefById = async (id) => {
   // valida ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('ID inválido');
+    throw new Error("ID inválido");
   }
 
   const contraRef = await ContraRef.findById(id)
-    .populate('referenciaId')
-    .populate('usuarioId', 'nome login');
+    .populate("referenciaId")
+    .populate("usuarioId", "nome login");
 
   if (!contraRef) {
-    throw new Error('Contra-referência não encontrada');
+    throw new Error("Contra-referência não encontrada");
   }
 
   return contraRef;
@@ -78,20 +73,16 @@ exports.getContraRefById = async (id) => {
 exports.updateContraRef = async (id, data) => {
   // valida ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('ID inválido');
+    throw new Error("ID inválido");
   }
 
-  const contraRef = await ContraRef.findByIdAndUpdate(
-    id,
-    data,
-    {
-      new: true, // retorna atualizado
-      runValidators: true, // roda validações do schema
-    }
-  );
+  const contraRef = await ContraRef.findByIdAndUpdate(id, data, {
+    new: true, // retorna atualizado
+    runValidators: true, // roda validações do schema
+  });
 
   if (!contraRef) {
-    throw new Error('Contra-referência não encontrada');
+    throw new Error("Contra-referência não encontrada");
   }
 
   return contraRef;
@@ -101,13 +92,13 @@ exports.updateContraRef = async (id, data) => {
 exports.deleteContraRef = async (id) => {
   // valida ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('ID inválido');
+    throw new Error("ID inválido");
   }
 
   const contraRef = await ContraRef.findByIdAndDelete(id);
 
   if (!contraRef) {
-    throw new Error('Contra-referência não encontrada');
+    throw new Error("Contra-referência não encontrada");
   }
 
   return true;
