@@ -131,19 +131,64 @@ const options = {
         // ── Gestante ─────────────────────────────────────────────
         GestanteInput: {
           type: "object",
-          required: ["nome", "cpf", "dataNascimento"],
+          required: [
+            "nome",
+            "cpf",
+            "dataNascimento",
+            "telefone",
+            "semanasGestacao",
+            "unidadeSaude",
+          ],
           properties: {
             nome: { type: "string", example: "Ana Paula Souza" },
-            cpf: { type: "string", example: "123.456.789-00" },
+            cpf: {
+              type: "string",
+              example: "12345678900",
+              description: "Somente números, 11 dígitos",
+            },
             dataNascimento: {
               type: "string",
               format: "date",
               example: "1995-06-15",
             },
             telefone: { type: "string", example: "(83) 99999-0000" },
+            telefoneSecundario: { type: "string", example: "(83) 88888-0000" },
             endereco: {
               type: "string",
               example: "Rua das Flores, 123 - Campina Grande/PB",
+            },
+            numeroCartaoSus: { type: "string", example: "123456789012345" },
+            semanasGestacao: { type: "number", example: 20 },
+            dataUltimaMenstruacao: {
+              type: "string",
+              format: "date",
+              example: "2024-01-10",
+            },
+            dataProvavelParto: {
+              type: "string",
+              format: "date",
+              example: "2024-10-17",
+            },
+            numGestacoes: { type: "number", example: 1 },
+            numPartos: { type: "number", example: 0 },
+            numAbortos: { type: "number", example: 0 },
+            resumoClinico: {
+              type: "string",
+              example: "Paciente sem comorbidades",
+            },
+            historicoDoencas: { type: "string", example: "Hipertensão leve" },
+            estratificacaoRisco: {
+              type: "string",
+              enum: ["alto", "medio", "baixo", "habitual"],
+              example: "habitual",
+            },
+            unidadeSaude: {
+              type: "string",
+              example: "UBS Centro - Campina Grande",
+            },
+            profissionalResponsavel: {
+              type: "string",
+              example: "Dr. João Pereira",
             },
           },
         },
