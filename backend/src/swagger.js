@@ -12,10 +12,6 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:3000",
-        description: "Servidor de desenvolvimento",
-      },
-      {
         url: "https://sistema-aps-ny0k.onrender.com",
         description: "Servidor de produção",
       },
@@ -578,11 +574,6 @@ const options = {
               name: "limit",
               in: "query",
               schema: { type: "integer", example: 10 },
-            },
-            {
-              name: "nome",
-              in: "query",
-              schema: { type: "string", example: "Ana" },
             },
           ],
           responses: {
