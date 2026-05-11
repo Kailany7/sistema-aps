@@ -57,18 +57,10 @@ const options = {
         },
         LoginInput: {
           type: "object",
-          required: ["email", "password"],
+          required: ["login", "senha"],
           properties: {
-            email: {
-              type: "string",
-              format: "email",
-              example: "maria@aps.gov.br",
-            },
-            password: {
-              type: "string",
-              format: "password",
-              example: "senha123",
-            },
+            login: { type: "string", example: "joao.pereira" },
+            senha: { type: "string", format: "password", example: "senha123" },
           },
         },
         AuthResponse: {
@@ -82,9 +74,13 @@ const options = {
               type: "object",
               properties: {
                 id: { type: "string", example: "664f1a2b3c4d5e6f7a8b9c0d" },
-                name: { type: "string", example: "Maria Silva" },
-                email: { type: "string", example: "maria@gmail.com" },
-                role: { type: "string", example: "user" },
+                nome: { type: "string", example: "Dr. João Pereira" },
+                login: { type: "string", example: "joao.pereira" },
+                perfil: { type: "string", example: "medico" },
+                unidade_saude: {
+                  type: "string",
+                  example: "UBS Centro - Campina Grande",
+                },
               },
             },
           },
@@ -373,47 +369,6 @@ const options = {
     ],
     paths: {
       // ── AUTH ──────────────────────────────────────────────────
-      "/auth/register": {
-        post: {
-          tags: ["Auth"],
-          summary: "Registrar novo usuário",
-          security: [],
-          requestBody: {
-            required: true,
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/RegisterInput" },
-              },
-            },
-          },
-          responses: {
-            201: {
-              description: "Usuário criado com sucesso",
-              content: {
-                "application/json": {
-                  schema: { $ref: "#/components/schemas/AuthResponse" },
-                },
-              },
-            },
-            400: {
-              description: "Dados inválidos",
-              content: {
-                "application/json": {
-                  schema: { $ref: "#/components/schemas/Error" },
-                },
-              },
-            },
-            409: {
-              description: "E-mail já cadastrado",
-              content: {
-                "application/json": {
-                  schema: { $ref: "#/components/schemas/Error" },
-                },
-              },
-            },
-          },
-        },
-      },
       "/auth/login": {
         post: {
           tags: ["Auth"],
