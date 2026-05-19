@@ -8,7 +8,7 @@ const authMiddleware = require("../middlewares/auth.middleware");
 // ROTAS GESTANTE
 // =========================
 
-//router.use(authMiddleware);
+router.use(authMiddleware);
 
 router.post("/", gestanteController.create);
 router.get("/", gestanteController.findAll);

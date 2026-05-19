@@ -53,7 +53,7 @@ const contraRefSchema = new mongoose.Schema(
     usuarioId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      //required: true, TESTAR SEM TOKEN
+      required: true, 
     },
   },
   { timestamps: true }

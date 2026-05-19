@@ -10,7 +10,7 @@ const authMiddleware = require('../middlewares/auth.middleware');
 
 // Middleware de autenticação
 // Descomente quando for validar JWT
-// router.use(authMiddleware);
+router.use(authMiddleware);
 
 // CREATE
 router.post('/', contrarrefController.create);
