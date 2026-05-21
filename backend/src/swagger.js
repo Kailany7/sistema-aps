@@ -31,59 +31,35 @@ const options = {
         // ── Auth ──────────────────────────────────────────────────
         RegisterInput: {
           type: "object",
-          required: ["name", "email", "password"],
+          required: ["nome", "login", "senha", "perfil"],
           properties: {
-            name: { type: "string", example: "Maria Silva" },
-            email: {
-              type: "string",
-              format: "email",
-              example: "maria@gmail.com",
-            },
-            password: {
-              type: "string",
-              format: "password",
-              minLength: 6,
-              example: "senha123",
-            },
-            role: {
-              type: "string",
-              enum: ["user", "admin"],
-              default: "user",
-              example: "user",
-            },
+            nome: { type: "string", example: "Maria Silva" },
+            login: { type: "string", example: "maria@aps.gov.br" },
+            senha: { type: "string", format: "password", minLength: 6, example: "senha123" },
+            perfil: { type: "string", enum: ["medico", "enfermeiro", "agente_saude"], example: "enfermeiro" },
+            unidade_saude: { type: "string", example: "USF Alto Branco" },
           },
         },
         LoginInput: {
           type: "object",
-          required: ["email", "password"],
+          required: ["login", "senha"],
           properties: {
-            email: {
-              type: "string",
-              format: "email",
-              example: "maria@aps.gov.br",
-            },
-            password: {
-              type: "string",
-              format: "password",
-              example: "senha123",
-            },
+            login: { type: "string", format: "email", example: "maria@aps.gov.br" },
+            senha: { type: "string", format: "password", example: "senha123" },
           },
         },
 
         AuthResponse: {
           type: "object",
           properties: {
-            token: {
-              type: "string",
-              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-            },
+            token: { type: "string", example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." },
             user: {
               type: "object",
               properties: {
-                id: { type: "integer", example: 1 },
-                name: { type: "string", example: "Maria Silva" },
-                email: { type: "string", example: "maria@gmail.com" },
-                role: { type: "string", example: "user" },
+                id: { type: "string", example: "6a0f507ab80096480746ebc2" },
+                nome: { type: "string", example: "Maria Silva" },
+                login: { type: "string", example: "maria@aps.gov.br" },
+                perfil: { type: "string", example: "enfermeiro" },
               },
             },
           },
@@ -143,7 +119,7 @@ const options = {
       // ═══════════════════════════════════════════════════════════
       // AUTH
       // ═══════════════════════════════════════════════════════════
-      "/auth/register": {
+      "/api/auth/register": {
         post: {
           tags: ["Auth"],
           summary: "Registrar novo usuário",
@@ -184,7 +160,7 @@ const options = {
           },
         },
       },
-      "/auth/login": {
+      "/api/auth/login": {
         post: {
           tags: ["Auth"],
           summary: "Autenticar usuário",

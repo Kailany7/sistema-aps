@@ -2,41 +2,42 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-const register = async ({ name, email, password, role }) => {
-  const exists = await User.findOne({ email });
-  if (exists) throw { status: 409, message: "E-mail já cadastrado" };
+const JWT_SECRET = () => process.env.JWT_SECRET || "sua_chave_secreta";
 
-  const hash = await bcrypt.hash(password, 10);
-  const user = await User.create({ name, email, password: hash, role });
+const register = async ({ nome, login, senha, perfil, unidade_saude }) => {
+  const exists = await User.findOne({ login });
+  if (exists) throw { status: 409, message: "Login já cadastrado" };
+
+  const user = await User.create({ nome, login, senha_hash: senha, perfil, unidade_saude });
 
   const token = jwt.sign(
-    { id: user._id, role: user.role },
-    process.env.JWT_SECRET,
+    { id: user._id, perfil: user.perfil },
+    JWT_SECRET(),
     { expiresIn: "7d" },
   );
 
   return {
     token,
-    user: { id: user._id, name: user.name, email: user.email, role: user.role },
+    user: { id: user._id, nome: user.nome, login: user.login, perfil: user.perfil },
   };
 };
 
-const login = async ({ email, password }) => {
-  const user = await User.findOne({ email });
+const login = async ({ login, senha }) => {
+  const user = await User.findOne({ login });
   if (!user) throw { status: 401, message: "Credenciais inválidas" };
 
-  const valid = await bcrypt.compare(password, user.password);
+  const valid = await bcrypt.compare(senha, user.senha_hash);
   if (!valid) throw { status: 401, message: "Credenciais inválidas" };
 
   const token = jwt.sign(
-    { id: user._id, role: user.role },
-    process.env.JWT_SECRET,
+    { id: user._id, perfil: user.perfil },
+    JWT_SECRET(),
     { expiresIn: "7d" },
   );
 
   return {
     token,
-    user: { id: user._id, name: user.name, email: user.email, role: user.role },
+    user: { id: user._id, nome: user.nome, login: user.login, perfil: user.perfil },
   };
 };
 

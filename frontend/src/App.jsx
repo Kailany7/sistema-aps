@@ -1,5 +1,30 @@
+import { Routes, Route, Navigate } from 'react-router-dom'
+import Login from './pages/Login'
+import MainLayout from './pages/MainLayout'
+import Dashboard from './pages/Dashboard'
+import CadastroGestante from './pages/CadastroGestante'
+import ListaGestantes from './pages/ListaGestantes'
+import AcompanhamentoGestante from './pages/AcompanhamentoGestante'
+import ListaEncaminhamentos from './pages/ListaEncaminhamentos'
+import NovoEncaminhamento from './pages/NovoEncaminhamento'
+import DetalheEncaminhamento from './pages/DetalheEncaminhamento'
+
 function App() {
-  return <h1>Sistema APS</h1>;
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route element={<MainLayout />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/cadastro-gestante" element={<CadastroGestante />} />
+        <Route path="/lista-gestantes" element={<ListaGestantes />} />
+        <Route path="/acompanhamento-gestante/:id" element={<AcompanhamentoGestante />} />
+        <Route path="/encaminhamentos" element={<ListaEncaminhamentos />} />
+        <Route path="/novo-encaminhamento" element={<NovoEncaminhamento />} />
+        <Route path="/encaminhamento/:id" element={<DetalheEncaminhamento />} />
+      </Route>
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
+  )
 }
 
-export default App;
+export default App

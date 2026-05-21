@@ -3,7 +3,6 @@ const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
 const conectarBanco = require('./config/db');
-const { port } = require('./config/env');
 
 const app = express();
 
@@ -19,12 +18,16 @@ const gestanteRoutes = require("./routes/gestante.routes");
 const referenciaRoutes = require("./routes/referencia.routes");
 const contrarrefRoutes = require("./routes/contrarref.routes");
 const userRoutes = require('./routes/user.routes');
+const unidadeRoutes = require('./routes/unidade.routes');
+const riscoRoutes = require('./routes/risco.routes');
 
-app.use("/auth", authRoutes);
-app.use("/gestantes", gestanteRoutes);
-app.use("/referencias", referenciaRoutes);
-app.use("/contrarreferencias", contrarrefRoutes);
-app.use('/usuarios', userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/gestantes", gestanteRoutes);
+app.use("/api/referencias", referenciaRoutes);
+app.use("/api/contrarreferencias", contrarrefRoutes);
+app.use('/api/usuarios', userRoutes);
+app.use('/api/unidades', unidadeRoutes);
+app.use('/api/riscos', riscoRoutes);
 
 // ── Swagger UI ────────────────────────────────────────────────
 app.use(
@@ -42,10 +45,6 @@ app.get("/api-docs.json", (req, res) => {
 });
 
 // ── Health check ──────────────────────────────────────────────
-app.get("/health", (req, res) => res.json({ status: "ok" }));
-
-app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port} ✓`);
-});
+app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
 module.exports = app;

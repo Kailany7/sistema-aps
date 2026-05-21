@@ -78,6 +78,7 @@ const gestanteSchema = new mongoose.Schema(
     },
     endereco: {
       type: String,
+      required: [true, 'Endereço é obrigatório'],
       trim: true,
     },
     numero_cartao_sus: {
@@ -88,7 +89,6 @@ const gestanteSchema = new mongoose.Schema(
     // Dados da gestação
     semanas_gestacao: {
       type: Number,
-      required: [true, 'Semanas de gestação são obrigatórias'],
     },
     data_ultima_menstruacao: {
       type: Date,
@@ -132,6 +132,7 @@ const gestanteSchema = new mongoose.Schema(
     },
     profissional_responsavel: {
       type: String,
+      required: [true, 'Profissional responsável é obrigatório'],
       trim: true,
     },
 
@@ -151,7 +152,6 @@ const gestanteSchema = new mongoose.Schema(
     usuario_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
     },
 
     // RELACIONAMENTO 1 - N COM CONSULTA (EMBUTIDO)

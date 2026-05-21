@@ -1,0 +1,7 @@
+export { gestanteService } from './gestanteService'
+export { encaminhamentoService } from './encaminhamentoService'
+export { usuarioService } from './usuarioService'
+export { consultaService } from './consultaService'
+export { exameService } from './exameService'
+export { unidadeService } from './unidadeService'
+export { riscoService } from './riscoService'
