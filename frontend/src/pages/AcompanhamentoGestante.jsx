@@ -9,18 +9,20 @@ import AsyncContent from '../components/AsyncContent'
 
 function AcompanhamentoGestante() {
   const { id } = useParams()
+  // eslint-disable-next-line no-unused-vars
   const navigate = useNavigate()
   const { addToast } = useToast()
   const [g, setG] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true)
     gestanteService.obter(id)
       .then((res) => setG(res.data))
       .catch((err) => addToast(extractError(err), 'danger'))
       .finally(() => setLoading(false))
-  }, [id])
+  }, [addToast, id])
 
   const semanas = g?.semanas_gestacao || '-'
   const dpp = g?.data_provavel_parto ? new Date(g.data_provavel_parto).toLocaleDateString('pt-BR') : '-'

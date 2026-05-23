@@ -24,7 +24,7 @@ function ListaEncaminhamentos() {
       .then((res) => setEncaminhamentos(res.data))
       .catch((err) => addToast(extractError(err), 'error'))
       .finally(() => setLoading(false))
-  }, [])
+  }, [addToast])
 
   const filtradas = encaminhamentos.filter((e) =>
     e.nome.toLowerCase().includes(busca.toLowerCase())
