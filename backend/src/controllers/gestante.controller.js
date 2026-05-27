@@ -82,3 +82,41 @@ exports.remove = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+// UPLOAD DE DOCUMENTOS
+exports.uploadDocumento = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Regra 1 — arquivo precisa ter sido enviado
+    if (!req.file) {
+      return res.status(400).json({ erro: 'Nenhum arquivo enviado' });
+    }
+
+    // Regra 2 — gestante precisa existir
+    const Gestante = require('../models/Gestante');
+    const gestante = await Gestante.findById(id);
+    if (!gestante) {
+      return res.status(404).json({ erro: 'Gestante não encontrada' });
+    }
+
+    // Monta o objeto do documento
+    const novoDocumento = {
+      nome: req.file.originalname,
+      url: `/uploads/${req.file.filename}`,
+      tipo: req.file.mimetype,
+      enviadoEm: new Date()
+    };
+
+    // Adiciona o documento no array da gestante
+    gestante.documentos.push(novoDocumento);
+    await gestante.save();
+
+    res.status(201).json({
+      mensagem: 'Documento enviado com sucesso',
+      documento: novoDocumento
+    });
+  } catch (erro) {
+    res.status(500).json({ erro: erro.message });
+  }
+};

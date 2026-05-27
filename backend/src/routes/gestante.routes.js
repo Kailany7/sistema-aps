@@ -3,6 +3,7 @@ const router = Router();
 
 const gestanteController = require("../controllers/gestante.controller");
 const consultaController = require("../controllers/consulta.controller");
+const upload = require("../middlewares/upload.middleware");
 const authMiddleware = require("../middlewares/auth.middleware");
 
 // =========================
@@ -23,5 +24,7 @@ router.get("/:id/consultas", consultaController.listarConsultas);
 router.put("/:id/consultas/:consultaId", consultaController.editarConsulta);
 router.delete("/:id/consultas/:consultaId", consultaController.removerConsulta);
 
+// rota para upload de documentos
+router.post("/:id/documentos", upload.single('arquivo'), gestanteController.uploadDocumento);
 
 module.exports = router;
