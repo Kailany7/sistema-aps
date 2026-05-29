@@ -7,7 +7,7 @@ const menuItems = [
   { icon: 'bi-people', label: 'Lista de Gestantes', route: '/lista-gestantes' },
   { icon: 'bi-heart-pulse', label: 'Acompanhamento Pré-Natal', route: '/acompanhamento-gestante/1' },
   { icon: 'bi-send', label: 'Encaminhamentos', route: '/encaminhamentos' },
-  { icon: 'bi-graph-up', label: 'Relatórios', route: '#' },
+  { icon: 'bi-graph-up', label: 'Relatórios', route: '/relatorios' },
 ]
 
 function MainLayout() {

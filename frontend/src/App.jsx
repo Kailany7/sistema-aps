@@ -9,6 +9,7 @@ import NovaConsulta from './pages/NovaConsulta'
 import ListaEncaminhamentos from './pages/ListaEncaminhamentos'
 import NovoEncaminhamento from './pages/NovoEncaminhamento'
 import DetalheEncaminhamento from './pages/DetalheEncaminhamento'
+import Relatorios from './pages/Relatorios'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/encaminhamentos" element={<ListaEncaminhamentos />} />
         <Route path="/novo-encaminhamento" element={<NovoEncaminhamento />} />
         <Route path="/encaminhamento/:id" element={<DetalheEncaminhamento />} />
+        <Route path="/relatorios" element={<Relatorios />} />
       </Route>
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
