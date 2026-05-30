@@ -91,7 +91,6 @@ const gestanteSchema = new mongoose.Schema(
     usuario_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
     resumoClinico: String,
     historicoDoencas: String,

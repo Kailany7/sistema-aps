@@ -12,6 +12,7 @@ async function main() {
   const UnidadeSaude = require('./src/models/UnidadeSaude');
   const Risco = require('./src/models/Risco');
   const Gestante = require('./src/models/Gestante');
+  const User = require('./src/models/User');
 
   // ── Unidades de Saúde ────────────────────────────────────────
   const unidades = [
@@ -36,9 +37,21 @@ async function main() {
   await Risco.insertMany(riscos);
   console.log(`  ${riscos.length} níveis de risco inseridos`);
 
+  // ── Usuário Padrão ───────────────────────────────────────────
+  await User.deleteMany({});
+  const usuario = await User.create({
+    nome: 'Administrador',
+    login: 'admin@aps.gov.br',
+    senha_hash: 'admin123',
+    perfil: 'medico',
+    unidade_saude: 'USF Alto Branco',
+  });
+  console.log('  1 usuário inserido (admin@aps.gov.br / admin123)');
+
   // ── Gestantes Mock ───────────────────────────────────────────
   const now = new Date();
   const makeDate = (y, m, d) => new Date(y, m - 1, d);
+  const usuarioId = usuario._id;
 
   const gestantes = [
     // ── 2 Baixo Risco ──
@@ -50,6 +63,7 @@ async function main() {
       endereco: 'Av. dos Estados, 456',
       unidade_saude: 'USF São José',
       profissional_responsavel: 'Dra. Marina Rocha',
+      usuario_id: usuarioId,
       semanas_gestacao: 20,
       data_ultima_menstruacao: makeDate(2026, 1, 3),
       data_provavel_parto: makeDate(2026, 10, 12),
@@ -70,6 +84,7 @@ async function main() {
       endereco: 'Rua Nova, 100',
       unidade_saude: 'USF Alto Branco',
       profissional_responsavel: 'Dr. Carlos Mendes',
+      usuario_id: usuarioId,
       semanas_gestacao: 14,
       data_ultima_menstruacao: makeDate(2026, 2, 15),
       data_provavel_parto: makeDate(2026, 11, 22),
@@ -91,6 +106,7 @@ async function main() {
       endereco: 'Rua do Sol, 789',
       unidade_saude: 'USF Cristo Redentor',
       profissional_responsavel: 'Dr. Paulo Nogueira',
+      usuario_id: usuarioId,
       semanas_gestacao: 28,
       data_ultima_menstruacao: makeDate(2025, 11, 8),
       data_provavel_parto: makeDate(2026, 8, 15),
@@ -114,6 +130,7 @@ async function main() {
       endereco: 'Rua das Acácias, 200',
       unidade_saude: 'USF São José',
       profissional_responsavel: 'Dra. Marina Rocha',
+      usuario_id: usuarioId,
       semanas_gestacao: 24,
       data_ultima_menstruacao: makeDate(2025, 12, 20),
       data_provavel_parto: makeDate(2026, 9, 26),
@@ -138,6 +155,7 @@ async function main() {
       endereco: 'Rua das Flores, 123',
       unidade_saude: 'USF Alto Branco',
       profissional_responsavel: 'Dr. Carlos Mendes',
+      usuario_id: usuarioId,
       semanas_gestacao: 32,
       data_ultima_menstruacao: makeDate(2025, 10, 5),
       data_provavel_parto: makeDate(2026, 7, 20),
@@ -162,6 +180,7 @@ async function main() {
       endereco: 'Rua da Paz, 321',
       unidade_saude: 'USF Pedro Gondim',
       profissional_responsavel: 'Dr. Paulo Nogueira',
+      usuario_id: usuarioId,
       semanas_gestacao: 36,
       data_ultima_menstruacao: makeDate(2025, 9, 15),
       data_provavel_parto: makeDate(2026, 6, 28),
