@@ -62,6 +62,11 @@ const criar = async (dados) => {
     gestante_id: dados.gestante_id,
     usuario_id: dados.usuario_id,
   });
+
+  await Gestante.findByIdAndUpdate(dados.gestante_id, {
+    $push: { referencias: ref._id },
+  });
+
   return formatarSaida(await Referencia.findById(ref._id).populate("gestante_id"));
 };
 
@@ -95,6 +100,11 @@ const atualizar = async (id, dados) => {
 const remover = async (id) => {
   const ref = await Referencia.findByIdAndDelete(id);
   if (!ref) throw { status: 404, message: "Encaminhamento não encontrado" };
+
+  await Gestante.findByIdAndUpdate(ref.gestante_id, {
+    $pull: { referencias: ref._id },
+  });
+
   return ref;
 };
 

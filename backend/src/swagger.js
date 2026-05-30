@@ -374,6 +374,7 @@ const options = {
         name: "Usuários",
         description: "Cadastro e listagem de profissionais de saúde",
       },
+      { name: "Dashboard", description: "Dados resumidos para a tela inicial" },
       { name: "Gestantes", description: "Cadastro e gestão de gestantes" },
       {
         name: "Encaminhamentos",
@@ -1432,6 +1433,74 @@ const options = {
               content: {
                 "application/json": {
                   schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+            500: {
+              description: "Erro interno",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+          },
+        },
+      },
+      // ── Dashboard ─────────────────────────────────────────────
+      "/api/dashboard": {
+        get: {
+          tags: ["Dashboard"],
+          summary: "Obter dados resumidos para tela inicial",
+          description: "Retorna total de gestantes, consultas recentes, alertas de risco, etc.",
+          security: [{ bearerAuth: [] }],
+          responses: {
+            200: {
+              description: "Dados do dashboard",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      success: { type: "boolean", example: true },
+                      data: {
+                        type: "object",
+                        properties: {
+                          totalGestantes: { type: "integer", example: 15 },
+                          altoRisco: { type: "integer", example: 3 },
+                          consultasAgendadas: { type: "integer", example: 7 },
+                          consultasRecentes: {
+                            type: "array",
+                            items: {
+                              type: "object",
+                              properties: {
+                                gestanteNome: { type: "string" },
+                                gestanteId: { type: "string" },
+                                data: { type: "string", format: "date-time" },
+                                tipo: { type: "string" },
+                                profissional: { type: "string" },
+                                semanaGestacional: { type: "integer" },
+                              },
+                            },
+                          },
+                          alertasRisco: {
+                            type: "array",
+                            items: {
+                              type: "object",
+                              properties: {
+                                _id: { type: "string" },
+                                nome: { type: "string" },
+                                cpf: { type: "string" },
+                                semanas_gestacao: { type: "integer" },
+                                unidade_saude: { type: "string" },
+                                estratificacaoRisco: { type: "string" },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
                 },
               },
             },

@@ -43,11 +43,11 @@ const listar = async (filtros = {}) => {
   const query = {};
   if (filtros.nome) query.nome = { $regex: filtros.nome, $options: "i" };
   if (filtros.risco) query.estratificacao_risco = mapRisco[filtros.risco];
-  return Gestante.find(query);
+  return Gestante.find(query).populate("referencias");
 };
 
 const obter = async (id) => {
-  const gestante = await Gestante.findById(id);
+  const gestante = await Gestante.findById(id).populate("referencias");
   if (!gestante) throw { status: 404, message: "Gestante não encontrada" };
   return gestante;
 };

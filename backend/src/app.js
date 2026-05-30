@@ -20,6 +20,7 @@ const contrarrefRoutes = require("./routes/contrarref.routes");
 const userRoutes = require('./routes/user.routes');
 const unidadeRoutes = require('./routes/unidade.routes');
 const riscoRoutes = require('./routes/risco.routes');
+const dashboardRoutes = require('./routes/dashboard.routes');
 
 app.use("/api/auth", authRoutes);
 app.use("/api/gestantes", gestanteRoutes);
@@ -28,6 +29,7 @@ app.use("/api/contrarreferencias", contrarrefRoutes);
 app.use('/api/usuarios', userRoutes);
 app.use('/api/unidades', unidadeRoutes);
 app.use('/api/riscos', riscoRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // ── Swagger UI ────────────────────────────────────────────────
 app.use(

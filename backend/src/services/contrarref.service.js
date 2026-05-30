@@ -4,10 +4,18 @@ const mongoose = require("mongoose");
 
 // CREATE
 exports.createContraRef = async (data, userId) => {
-  return await ContraRef.create({
+  const contraRef = await ContraRef.create({
     ...data,
     usuarioId: userId,
   });
+
+  await Referencia.findByIdAndUpdate(data.referencia_id, {
+    $set: { contrarref_id: contraRef._id },
+  });
+
+  return await ContraRef.findById(contraRef._id)
+    .populate("referencia_id")
+    .populate("usuarioId", "nome login");
 };
 
 // GET ALL
@@ -16,7 +24,6 @@ exports.getContraRefs = async (query) => {
 
   const filtro = {};
 
-  // filtro por CID
   if (cid10) {
     filtro.cid10 = {
       $regex: cid10,
@@ -24,7 +31,6 @@ exports.getContraRefs = async (query) => {
     };
   }
 
-  // filtro por status
   if (statusGestante) {
     filtro.statusGestante = statusGestante;
   }
@@ -35,7 +41,7 @@ exports.getContraRefs = async (query) => {
 
   const [contraRefs, total] = await Promise.all([
     ContraRef.find(filtro)
-      .populate("referenciaId")
+      .populate("referencia_id")
       .populate("usuarioId", "nome login")
       .sort({ createdAt: -1 })
       .skip(skip)
@@ -53,13 +59,12 @@ exports.getContraRefs = async (query) => {
 
 // GET BY ID
 exports.getContraRefById = async (id) => {
-  // valida ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new Error("ID inválido");
   }
 
   const contraRef = await ContraRef.findById(id)
-    .populate("referenciaId")
+    .populate("referencia_id")
     .populate("usuarioId", "nome login");
 
   if (!contraRef) {
@@ -90,7 +95,6 @@ exports.updateContraRef = async (id, data) => {
 
 // DELETE
 exports.deleteContraRef = async (id) => {
-  // valida ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new Error("ID inválido");
   }
@@ -100,6 +104,10 @@ exports.deleteContraRef = async (id) => {
   if (!contraRef) {
     throw new Error("Contra-referência não encontrada");
   }
+
+  await Referencia.findByIdAndUpdate(contraRef.referencia_id, {
+    $unset: { contrarref_id: "" },
+  });
 
   return true;
 };

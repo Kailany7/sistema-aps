@@ -109,6 +109,12 @@ const gestanteSchema = new mongoose.Schema(
       },
     ],
     consultas: [consultaSchema],
+    referencias: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Referencia",
+      },
+    ],
   },
   { timestamps: true },
 );

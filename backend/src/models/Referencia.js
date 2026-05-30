@@ -51,7 +51,6 @@ const referenciaSchema = new mongoose.Schema(
     ],
 
     // RELACIONAMENTO 1 - N COM GESTANTE
-    // Um encaminhamento pertence a uma gestante
     gestante_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Gestante',
@@ -59,11 +58,16 @@ const referenciaSchema = new mongoose.Schema(
     },
 
     // RELACIONAMENTO 1 - N COM USUARIO
-    // Um encaminhamento é solicitado por um usuário
     usuario_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
+    },
+
+    // RELACIONAMENTO 1 - 1 COM CONTRA-REFERENCIA
+    contrarref_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ContraRef',
     },
   },
   { timestamps: true }
