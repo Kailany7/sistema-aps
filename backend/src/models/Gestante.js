@@ -1,90 +1,116 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const consultaSchema = new mongoose.Schema({
-  data: { type: Date, required: true },
-  tipo: String,
-  profissional: String,
-  semanaGestacional: Number,
-  peso: Number,
-  pressaoArterial: String,
-  batimentosFetais: Number,
-  alturaUterina: Number,
-  examesSolicitados: [String],
-  observacoes: String,
-  usuario_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  }
-}, { timestamps: true });
+const consultaSchema = new mongoose.Schema(
+  {
+    data: { type: Date, required: true },
+    tipo: String,
+    profissional: String,
+    semanaGestacional: Number,
+    peso: Number,
+    pressaoArterial: String,
+    batimentosFetais: Number,
+    alturaUterina: Number,
+    examesSolicitados: [String],
+    observacoes: String,
+    usuario_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  },
+  { timestamps: true },
+);
 
 // DADOS PESSOAIS
-const gestanteSchema = new mongoose.Schema({
-  nome: { type: String, required: true, trim: true },
-
-  cpf: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    match: [/^\d{11}$/, 'CPF deve conter 11 números']
+const gestanteSchema = new mongoose.Schema(
+  {
+    // Dados pessoais
+    nome: {
+      type: String,
+      required: [true, "Nome é obrigatório"],
+      trim: true,
+    },
+    cpf: {
+      type: String,
+      required: [true, "CPF é obrigatório"],
+      unique: true,
+      trim: true,
+    },
+    data_nascimento: {
+      type: Date,
+      required: [true, "Data de nascimento é obrigatória"],
+    },
+    telefone: {
+      type: String,
+      required: [true, "Telefone é obrigatório"],
+      trim: true,
+    },
+    telefone_secundario: {
+      type: String,
+      trim: true,
+    },
+    endereco: {
+      type: String,
+      required: [true, "Endereço é obrigatório"],
+      trim: true,
+    },
+    numero_cartao_sus: {
+      type: String,
+      trim: true,
+    },
+    semanas_gestacao: {
+      type: Number,
+    },
+    data_ultima_menstruacao: {
+      type: Date,
+    },
+    data_provavel_parto: {
+      type: Date,
+    },
+    num_gestacoes: {
+      type: Number,
+      default: 0,
+    },
+    num_partos: {
+      type: Number,
+      default: 0,
+    },
+    num_abortos: {
+      type: Number,
+      default: 0,
+    },
+    unidade_saude: {
+      type: String,
+      required: [true, "Unidade de saúde é obrigatória"],
+      trim: true,
+    },
+    profissional_responsavel: {
+      type: String,
+      required: [true, "Profissional responsável é obrigatório"],
+      trim: true,
+    },
+    usuario_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    resumoClinico: String,
+    historicoDoencas: String,
+    estratificacaoRisco: {
+      type: String,
+      enum: ["alto", "medio", "baixo", "habitual"],
+      default: "habitual",
+    },
+    documentos: [
+      {
+        nome: String,
+        url: String,
+        tipo: String,
+        enviadoEm: { type: Date, default: Date.now },
+      },
+    ],
+    consultas: [consultaSchema],
   },
+  { timestamps: true },
+);
 
-  dataNascimento: { type: Date, required: true },
-
-  telefone: { type: String, required: true },
-  telefoneSecundario: String,
-  endereco: String,
-  numeroCartaoSus: String,
-
-  // Dados da gestação
-
-  semanasGestacao: { type: Number, required: true },
-  dataUltimaMenstruacao: Date,
-  dataProvavelParto: Date,
-
-  numGestacoes: { type: Number, default: 0 },
-  numPartos: { type: Number, default: 0 },
-  numAbortos: { type: Number, default: 0 },
-
-  // Dados clínicos
-
-  resumoClinico: String,
-  historicoDoencas: String,
-
-  estratificacaoRisco: {
-    type: String,
-    enum: ['alto', 'medio', 'baixo', 'habitual'],
-    default: 'habitual'
-  },
-
-  // Unidade de saúde
-  unidadeSaude: { type: String, required: true },
-  profissionalResponsavel: String,
-
-  //Documentos anexados (preenchido pelo multer) 
-  documentos: [
-    {
-      nome: String,
-      url: String,
-      tipo: String,
-      enviadoEm: { type: Date, default: Date.now }
-    }
-  ],
-
-  // RELACIONAMENTO 1 - N COM USUARIO
-  // Uma gestante é cadastrada por um usuário (profissional de saúde)
-  // O usuario_id vem do token JWT após o login
-  usuario_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  // RELACIONAMENTO 1 - N COM CONSULTA (EMBUTIDO)
-  // Uma gestante tem muitas consultas
-  // As consultas ficam dentro do documento da gestante como array
-  // Não precisa buscar em outra coleção — já vem junto
-  consultas: [consultaSchema]
-
-}, { timestamps: true });
-
-module.exports = mongoose.model('Gestante', gestanteSchema);
+module.exports = mongoose.model("Gestante", gestanteSchema);

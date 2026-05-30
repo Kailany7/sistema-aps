@@ -1,14 +1,7 @@
-# Dependencies
-*/node_modules/
-*/.env
-*/.env.local
-
-# Build outputs
-*/dist/
-*/build/
-
-# Logs
+node_modules/
+.env
+.env.local
+dist/
+build/
 *.log
-
-# OS
 .DS_Store

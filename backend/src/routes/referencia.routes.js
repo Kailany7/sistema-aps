@@ -1,14 +1,12 @@
 const { Router } = require("express");
-const router = Router();
 const referenciaController = require("../controllers/referencia.controller");
-const authMiddleware = require("../middlewares/auth.middleware");
 
-router.use(authMiddleware);
+const router = Router();
 
-router.post("/", referenciaController.create);
-router.get("/", referenciaController.findAll);
-router.get("/:id", referenciaController.findById);
-router.put("/:id", referenciaController.update);
-router.delete("/:id", referenciaController.remove);
+router.get("/", referenciaController.listar);
+router.get("/:id", referenciaController.obter);
+router.post("/", referenciaController.criar);
+router.put("/:id", referenciaController.atualizar);
+router.delete("/:id", referenciaController.remover);
 
 module.exports = router;

@@ -1,30 +1,12 @@
 const { Router } = require("express");
+const gestanteController = require("../controllers/gestante.controller");
+
 const router = Router();
 
-const gestanteController = require("../controllers/gestante.controller");
-const consultaController = require("../controllers/consulta.controller");
-const upload = require("../middlewares/upload.middleware");
-const authMiddleware = require("../middlewares/auth.middleware");
-
-// =========================
-// ROTAS GESTANTE
-// =========================
-
-router.use(authMiddleware);
-
-router.post("/", gestanteController.create);
-router.get("/", gestanteController.findAll);
-router.get("/:id", gestanteController.findById);
-router.put("/:id", gestanteController.update);
-router.delete("/:id", gestanteController.remove);
-
-//rotas consultas
-router.post("/:id/consultas", consultaController.registrarConsulta);
-router.get("/:id/consultas", consultaController.listarConsultas);
-router.put("/:id/consultas/:consultaId", consultaController.editarConsulta);
-router.delete("/:id/consultas/:consultaId", consultaController.removerConsulta);
-
-// rota para upload de documentos
-router.post("/:id/documentos", upload.single('arquivo'), gestanteController.uploadDocumento);
+router.post("/", gestanteController.criar);
+router.get("/", gestanteController.listar);
+router.get("/:id", gestanteController.obter);
+router.put("/:id", gestanteController.atualizar);
+router.delete("/:id", gestanteController.remover);
 
 module.exports = router;

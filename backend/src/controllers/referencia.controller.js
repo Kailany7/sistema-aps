@@ -1,91 +1,48 @@
-const Referencia = require("../models/Referencia");
+const referenciaService = require("../services/referencia.service");
 
-// POST /referencias
-exports.create = async (req, res) => {
+const criar = async (req, res) => {
   try {
-    const referencia = await Referencia.create({
-      ...req.body,
-      usuario_id: req.user.id,
-    });
-    res.status(201).json({ success: true, data: referencia });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    const ref = await referenciaService.criar(req.body);
+    res.status(201).json(ref);
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message });
   }
 };
 
-// GET /referencias
-exports.findAll = async (req, res) => {
+const listar = async (req, res) => {
   try {
-    const { status, dataInicio, dataFim, gestante_id } = req.query;
-
-    const filtro = {};
-
-    if (status) filtro.status = status;
-    if (gestante_id) filtro.gestante_id = gestante_id;
-    if (dataInicio || dataFim) {
-      filtro.data_solicitacao = {};
-      if (dataInicio) filtro.data_solicitacao.$gte = new Date(dataInicio);
-      if (dataFim) filtro.data_solicitacao.$lte = new Date(dataFim);
-    }
-
-    const referencias = await Referencia.find(filtro)
-      .populate("gestante_id", "nome cpf")
-      .populate("usuario_id", "nome perfil")
-      .sort({ data_solicitacao: -1 });
-
-    res.json({ success: true, total: referencias.length, data: referencias });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const refs = await referenciaService.listar();
+    res.json(refs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
 
-// GET /referencias/:id
-exports.findById = async (req, res) => {
+const obter = async (req, res) => {
   try {
-    const referencia = await Referencia.findById(req.params.id)
-      .populate("gestante_id", "nome cpf telefone")
-      .populate("usuario_id", "nome perfil");
-
-    if (!referencia) {
-      return res.status(404).json({ message: "Referência não encontrada" });
-    }
-
-    res.json({ success: true, data: referencia });
-  } catch (error) {
-    res.status(404).json({ message: error.message });
+    const ref = await referenciaService.obter(req.params.id);
+    res.json(ref);
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message });
   }
 };
 
-// PUT /referencias/:id
-exports.update = async (req, res) => {
+const atualizar = async (req, res) => {
   try {
-    const referencia = await Referencia.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true },
-    );
-
-    if (!referencia) {
-      return res.status(404).json({ message: "Referência não encontrada" });
-    }
-
-    res.json({ success: true, data: referencia });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    const ref = await referenciaService.atualizar(req.params.id, req.body);
+    res.json(ref);
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message });
   }
 };
 
-// DELETE /referencias/:id
-exports.remove = async (req, res) => {
+const remover = async (req, res) => {
   try {
-    const referencia = await Referencia.findByIdAndDelete(req.params.id);
-
-    if (!referencia) {
-      return res.status(404).json({ message: "Referência não encontrada" });
-    }
-
-    res.json({ success: true });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    await referenciaService.remover(req.params.id);
+    res.status(204).end();
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message });
   }
 };
+
+module.exports = { criar, listar, obter, atualizar, remover };

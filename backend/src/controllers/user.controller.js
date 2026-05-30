@@ -3,7 +3,7 @@ const User = require('../models/User');
 
 const cadastrarUsuario = async (req, res) => {
   try {
-    const { nome, login, senha_hash, perfil, unidade_saude } = req.body;
+    const { nome, login, senha, perfil, unidade_saude } = req.body;
 
     // Regra 1 — campos obrigatórios
     if (!nome || !login || !senha_hash || !perfil || !unidade_saude) {
@@ -28,7 +28,7 @@ const cadastrarUsuario = async (req, res) => {
     const usuario = await User.create({
       nome,
       login,
-      senha_hash,
+      senha_hash: senha,
       perfil,
       unidade_saude,
     });

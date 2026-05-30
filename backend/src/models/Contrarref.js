@@ -40,9 +40,9 @@ const contraRefSchema = new mongoose.Schema(
       default: Date.now,
     },
 
-    // RELACIONAMENTO 1 - N COM ENCAMINHAMENTO
-    // Uma contra-referência pertence a um encaminhamento
-    referenciaId: {
+    // RELACIONAMENTO 1 - 1 COM ENCAMINHAMENTO 
+    // Um encaminhamento gera no máximo uma contra-referência
+    referencia_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Referencia',
       required: true,

@@ -29,54 +29,34 @@ const options = {
         // ── Auth ──────────────────────────────────────────────────
         RegisterInput: {
           type: "object",
-          required: ["name", "email", "password"],
+          required: ["nome", "login", "senha", "perfil"],
           properties: {
-            name: { type: "string", example: "Maria Silva" },
-            email: {
-              type: "string",
-              format: "email",
-              example: "maria@gmail.com",
-            },
-            password: {
-              type: "string",
-              format: "password",
-              minLength: 6,
-              example: "senha123",
-            },
-            role: {
-              type: "string",
-              enum: ["user", "admin"],
-              default: "user",
-              example: "user",
-            },
+            nome: { type: "string", example: "Maria Silva" },
+            login: { type: "string", example: "maria@aps.gov.br" },
+            senha: { type: "string", format: "password", minLength: 6, example: "senha123" },
+            perfil: { type: "string", enum: ["medico", "enfermeiro", "agente_saude"], example: "enfermeiro" },
+            unidade_saude: { type: "string", example: "USF Alto Branco" },
           },
         },
         LoginInput: {
           type: "object",
           required: ["login", "senha"],
           properties: {
-            login: { type: "string", example: "joao.pereira" },
+            login: { type: "string", format: "email", example: "maria@aps.gov.br" },
             senha: { type: "string", format: "password", example: "senha123" },
           },
         },
         AuthResponse: {
           type: "object",
           properties: {
-            token: {
-              type: "string",
-              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-            },
+            token: { type: "string", example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." },
             user: {
               type: "object",
               properties: {
-                id: { type: "string", example: "664f1a2b3c4d5e6f7a8b9c0d" },
-                nome: { type: "string", example: "Dr. João Pereira" },
-                login: { type: "string", example: "joao.pereira" },
-                perfil: { type: "string", example: "medico" },
-                unidade_saude: {
-                  type: "string",
-                  example: "UBS Centro - Campina Grande",
-                },
+                id: { type: "string", example: "6a0f507ab80096480746ebc2" },
+                nome: { type: "string", example: "Maria Silva" },
+                login: { type: "string", example: "maria@aps.gov.br" },
+                perfil: { type: "string", example: "enfermeiro" },
               },
             },
           },
@@ -409,8 +389,51 @@ const options = {
       },
     ],
     paths: {
-      // ── AUTH ──────────────────────────────────────────────────
-      "/auth/login": {
+      // ═══════════════════════════════════════════════════════════
+      // AUTH
+      // ═══════════════════════════════════════════════════════════
+      "/api/auth/register": {
+        post: {
+          tags: ["Auth"],
+          summary: "Registrar novo usuário",
+          security: [],
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/RegisterInput" },
+              },
+            },
+          },
+          responses: {
+            201: {
+              description: "Usuário criado com sucesso",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/AuthResponse" },
+                },
+              },
+            },
+            400: {
+              description: "Dados inválidos",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+            409: {
+              description: "E-mail já cadastrado",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/Error" },
+                },
+              },
+            },
+          },
+        },
+      },
+      "/api/auth/login": {
         post: {
           tags: ["Auth"],
           summary: "Autenticar usuário",

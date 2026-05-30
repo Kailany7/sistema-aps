@@ -1,98 +1,69 @@
-const Gestante = require('../models/Gestante');
-const mongoose = require('mongoose');
+const Gestante = require("../models/Gestante");
 
-// CREATE
-exports.createGestante = async (data, userId) => {
-  return await Gestante.create({
-    ...data,
-    usuario_id: userId
-  });
+const mapRisco = {
+  Baixo: "baixo",
+  Intermediário: "medio",
+  Alto: "alto",
 };
 
-// GET ALL 
-exports.getGestantes = async (query) => {
-  const {
-    nome,
-    cpf,
-    estratificacaoRisco,
-    unidadeSaude,
-    page = 1,
-    limit = 10
-  } = query;
-
-  const filtro = {};
-
-  if (nome) filtro.nome = { $regex: nome, $options: 'i' };
-  if (cpf) filtro.cpf = cpf;
-  if (estratificacaoRisco) filtro.estratificacaoRisco = estratificacaoRisco;
-  if (unidadeSaude) filtro.unidadeSaude = unidadeSaude;
-
-  const pageNumber = Number(page);
-  const limitNumber = Number(limit);
-
-  const skip = (pageNumber - 1) * limitNumber;
-
-  const [gestantes, total] = await Promise.all([
-    Gestante.find(filtro)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limitNumber),
-
-    Gestante.countDocuments(filtro)
-  ]);
-
-  return {
-    total,
-    page: pageNumber,
-    data: gestantes
+function mapearDados(body) {
+  const dados = {
+    nome: body.nome,
+    cpf: body.cpf,
+    data_nascimento: body.dataNasc,
+    telefone: body.telefone,
+    endereco: body.endereco,
+    unidade_saude: body.unidade,
+    profissional_responsavel: body.profissional || "",
   };
+
+  if (body.telSecundario) dados.telefone_secundario = body.telSecundario;
+  if (body.semanas) dados.semanas_gestacao = body.semanas;
+  if (body.dum) dados.data_ultima_menstruacao = body.dum;
+  if (body.dpp) dados.data_provavel_parto = body.dpp;
+  if (body.gestacoes) dados.num_gestacoes = body.gestacoes;
+  if (body.partos) dados.num_partos = body.partos;
+  if (body.abortos) dados.num_abortos = body.abortos;
+  if (body.resumoClinico) dados.resumo_clinico = body.resumoClinico;
+  if (body.historicoDoencas) dados.historico_doencas = body.historicoDoencas;
+  if (body.risco) dados.estratificacao_risco = mapRisco[body.risco] || "habitual";
+
+  return dados;
+}
+
+const criar = async (dados) => {
+  const existente = await Gestante.findOne({ cpf: dados.cpf });
+  if (existente) throw { status: 409, message: "CPF já cadastrado" };
+
+  const gestante = await Gestante.create(mapearDados(dados));
+  return gestante;
 };
 
-// GET BY ID
-exports.getGestanteById = async (id) => {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('ID inválido');
-  }
+const listar = async (filtros = {}) => {
+  const query = {};
+  if (filtros.nome) query.nome = { $regex: filtros.nome, $options: "i" };
+  if (filtros.risco) query.estratificacao_risco = mapRisco[filtros.risco];
+  return Gestante.find(query);
+};
 
+const obter = async (id) => {
   const gestante = await Gestante.findById(id);
-
-  if (!gestante) {
-    throw new Error('Gestante não encontrada');
-  }
-
+  if (!gestante) throw { status: 404, message: "Gestante não encontrada" };
   return gestante;
 };
 
-// UPDATE
-exports.updateGestante = async (id, data) => {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('ID inválido');
-  }
+const atualizar = async (id, dados) => {
+  const gestante = await Gestante.findById(id);
+  if (!gestante) throw { status: 404, message: "Gestante não encontrada" };
 
-  const gestante = await Gestante.findByIdAndUpdate(
-    id,
-    data,
-    { new: true, runValidators: true }
-  );
-
-  if (!gestante) {
-    throw new Error('Gestante não encontrada');
-  }
-
-  return gestante;
+  Object.assign(gestante, mapearDados(dados));
+  return gestante.save();
 };
 
-// DELETE
-exports.deleteGestante = async (id) => {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new Error('ID inválido');
-  }
-
+const remover = async (id) => {
   const gestante = await Gestante.findByIdAndDelete(id);
-
-  if (!gestante) {
-    throw new Error('Gestante não encontrada');
-  }
-
-  return true;
+  if (!gestante) throw { status: 404, message: "Gestante não encontrada" };
+  return gestante;
 };
+
+module.exports = { criar, listar, obter, atualizar, remover };
