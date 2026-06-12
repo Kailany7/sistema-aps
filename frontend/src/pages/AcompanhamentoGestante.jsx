@@ -14,6 +14,8 @@ function AcompanhamentoGestante() {
   const { addToast } = useToast();
   const [g, setG] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [dataInicio, setDataInicio] = useState("");
+  const [dataFim, setDataFim] = useState("");
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -27,10 +29,40 @@ function AcompanhamentoGestante() {
 
   const hoje = new Date();
   const consultas = g?.consultas || [];
-  const futuras = consultas.filter((c) => new Date(c.data) >= hoje);
-  const passadas = consultas.filter((c) => new Date(c.data) < hoje);
+  const futuras = consultas.filter((c) => {
+    const dataConsulta = new Date(c.data);
+
+    const dentroInicio = !dataInicio || dataConsulta >= new Date(dataInicio);
+
+    const dentroFim =
+      !dataFim || dataConsulta <= new Date(`${dataFim}T23:59:59`);
+
+    return dataConsulta >= hoje && dentroInicio && dentroFim;
+  });
+
+  const passadas = consultas.filter((c) => {
+    const dataConsulta = new Date(c.data);
+
+    const dentroInicio = !dataInicio || dataConsulta >= new Date(dataInicio);
+
+    const dentroFim =
+      !dataFim || dataConsulta <= new Date(`${dataFim}T23:59:59`);
+
+    return dataConsulta < hoje && dentroInicio && dentroFim;
+  });
   const meses = [
-    "Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez",
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez",
   ];
 
   return (
@@ -53,6 +85,53 @@ function AcompanhamentoGestante() {
       </PageHeader>
 
       <hr />
+
+      <div className="card shadow-sm border-0 mb-4">
+  <div className="card-body">
+    <div className="row g-3">
+      <div className="col-md-6">
+        <label className="form-label fw-semibold">
+          Data Inicial
+        </label>
+
+        <input
+          type="date"
+          className="form-control"
+          value={dataInicio}
+          onChange={(e) => setDataInicio(e.target.value)}
+        />
+      </div>
+
+      <div className="col-md-6">
+        <label className="form-label fw-semibold">
+          Data Final
+        </label>
+
+        <input
+          type="date"
+          className="form-control"
+          value={dataFim}
+          onChange={(e) => setDataFim(e.target.value)}
+        />
+      </div>
+
+      <div className="col-12 d-flex justify-content-end mt-2">
+        <button
+          type="button"
+          className="btn btn-outline-secondary"
+          onClick={() => {
+            setDataInicio("");
+            setDataFim("");
+          }}
+        >
+
+          <i className="bi bi-x-circle me-2"></i>
+          Limpar Filtros
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
       <div className="row g-4">
         <CardSection
