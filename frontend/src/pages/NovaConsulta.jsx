@@ -13,6 +13,7 @@ function NovaConsulta() {
   }
 
   return (
+    
     <div className="container-fluid py-4">
       <div
         className="bg-white rounded-4 shadow-sm border-top border-4 p-4"
