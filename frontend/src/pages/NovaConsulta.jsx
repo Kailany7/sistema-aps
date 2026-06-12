@@ -15,31 +15,38 @@ function NovaConsulta() {
 
   return (
     <div className="p-4">
-      <PageHeader
-        icon="bi-heart-pulse"
-        title="Registrar Nova Consulta"
-        subtitle="Preencha os dados da consulta pré-natal."
-      />
+      {/* Título e botão de voltar */}
+      <div className="d-flex justify-content-between align-items-start">
+        <PageHeader
+          icon="bi-clipboard-plus"
+          title="Registrar Nova Consulta"
+          subtitle="Preencha os dados da consulta pré-natal."
+        />
 
-      <div className="container-fluid py-4">
-        <div
-          className="bg-white rounded-4 shadow-sm border-top border-4 p-4"
-          style={{ borderTopColor: "#8B5CF6" }}
+        <button
+          className="btn btn-outline-secondary"
+          onClick={() => navigate(`/acompanhamento-gestante/${id}`)}
         >
-          <div className="mb-3">
-            <button
-              className="btn btn-outline-secondary"
-              onClick={() => navigate(`/acompanhamento-gestante/${id}`)}
-            >
-              <i className="bi bi-arrow-left me-2"></i>
-              Voltar
-            </button>
-          </div>
+          <i className="bi bi-arrow-left me-2"></i>
+          Voltar
+        </button>
+      </div>
 
+      <hr className="my-3" />
+
+      <div className="bg-white rounded-4 shadow-sm overflow-hidden">
+        <div
+          style={{
+            height: "5px",
+            backgroundColor: "#0D6EFD",
+            width: "100%",
+          }}
+        />
+
+        <div className="p-4">
           {/* Formulário */}
           <form onSubmit={handleSubmit}>
             <div className="row g-4">
-
               {/* Nome da gestante */}
               <div className="col-md-6">
                 <label className="form-label fw-semibold">
@@ -136,9 +143,7 @@ function NovaConsulta() {
 
               {/* Observações */}
               <div className="col-12">
-                <label className="form-label fw-semibold">
-                  Observações
-                </label>
+                <label className="form-label fw-semibold">Observações</label>
 
                 <textarea
                   rows={5}
