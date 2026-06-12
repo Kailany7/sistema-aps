@@ -59,6 +59,7 @@ function Dashboard() {
         title="Página Principal"
         subtitle="Visão geral do sistema de gestão de gestantes de alto risco"
       />
+      <p></p>
 
       <div className="row g-3 mb-4">
         {cards.map((c) => (

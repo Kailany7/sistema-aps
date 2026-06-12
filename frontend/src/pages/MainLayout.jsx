@@ -5,7 +5,7 @@ const menuItems = [
   { icon: 'bi-house-door', label: 'Início', route: '/dashboard' },
   { icon: 'bi-person-plus', label: 'Cadastro de Gestantes', route: '/cadastro-gestante' },
   { icon: 'bi-people', label: 'Lista de Gestantes', route: '/lista-gestantes' },
-  { icon: 'bi-heart-pulse', label: 'Acompanhamento Pré-Natal', route: '/acompanhamento-gestante/1' },
+  { icon: 'bi-heart-pulse', label: 'Consultas Agendadas', route: '/acompanhamento-gestante/1' },
   { icon: 'bi-send', label: 'Encaminhamentos', route: '/encaminhamentos' },
   { icon: 'bi-graph-up', label: 'Relatórios', route: '/relatorios' },
 ]

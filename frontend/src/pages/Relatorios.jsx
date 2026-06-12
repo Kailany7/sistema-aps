@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import {
-  ArrowLeft,
   FileSpreadsheet,
   Download,
   FileText,
@@ -38,7 +37,7 @@ function Relatorios() {
   }
 
   return (
-    <div className="container-fluid py-4 ps-md-5 pe-md-4" style={{ backgroundColor: '#f4f7fe', minHeight: '100vh' }}>
+    <div className="container-fluid py-4 ps-md-5 pe-md-4" style={{ minHeight: '100vh' }}>
       <div className="mx-auto" style={{ maxWidth: '1400px' }}>
         
         {/* HEADER */}
@@ -55,15 +54,14 @@ function Relatorios() {
             </div>
           </div>
 
-          <Button
-            variant="outline"
-            onClick={() => navigate('/dashboard')}
-            className="shadow-sm bg-white"
-          >
-            <ArrowLeft className="me-2" size={16} />
-            Voltar
-          </Button>
-        </div>
+          <button
+          className="btn btn-outline-secondary"
+          onClick={() => navigate(`/dashboard`)}
+        >
+          <i className="bi bi-arrow-left me-2"></i>
+          Voltar
+        </button>
+      </div>
 
         {/* CARDS DE SELEÇÃO */}
         <div className="row g-4 mb-4">
@@ -217,12 +215,12 @@ function Relatorios() {
             <div className="p-4">
               <div className="row g-4">
                 <div className="col-md-6">
-                  <Label htmlFor="dataInicio" className="text-secondary small fw-medium mb-1">Data Início</Label>
+                  <Label htmlFor="dataInicio" className="text-secondary small fw-medium mb-1">Data Início </Label>
                   <Input id="dataInicio" type="date" className="rounded-pill border-light-subtle bg-light/30" />
                 </div>
 
                 <div className="col-md-6">
-                  <Label htmlFor="dataFim" className="text-secondary small fw-medium mb-1">Data Fim</Label>
+                  <Label htmlFor="dataFim" className="text-secondary small fw-medium mb-1">Data Fim </Label>
                   <Input id="dataFim" type="date" className="rounded-pill border-light-subtle bg-light/30" />
                 </div>
               </div>
@@ -285,7 +283,7 @@ function Relatorios() {
                     </thead>
                     <tbody className="text-dark">
                       <tr>
-                        <td colSpan="5" className="text-center py-4 text-muted style={{ fontStyle: 'italic' }}">
+                        <td colSpan="5" className="text-center py-4 text-muted" style={{ fontStyle: 'italic' }}>
                           Nenhum registro encontrado para os filtros selecionados.
                         </td>
                       </tr>

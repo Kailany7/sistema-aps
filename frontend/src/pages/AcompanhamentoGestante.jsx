@@ -1,44 +1,76 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { gestanteService } from '../services'
-import { useToast } from '../contexts/ToastContext'
-import { extractError } from '../utils/errors'
-import PageHeader from '../components/PageHeader'
-import CardSection from '../components/CardSection'
-import AsyncContent from '../components/AsyncContent'
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { gestanteService } from "../services";
+import { useToast } from "../contexts/ToastContext";
+import { extractError } from "../utils/errors";
+import PageHeader from "../components/PageHeader";
+import CardSection from "../components/CardSection";
+import AsyncContent from "../components/AsyncContent";
 
 function AcompanhamentoGestante() {
-  const { id } = useParams()
+  const { id } = useParams();
   // "eslint-disable-next-line no-unused-vars"
-  const navigate = useNavigate()
-  const { addToast } = useToast()
-  const [g, setG] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const navigate = useNavigate();
+  const { addToast } = useToast();
+  const [g, setG] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [dataInicio, setDataInicio] = useState("");
+  const [dataFim, setDataFim] = useState("");
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(true)
-    gestanteService.obter(id)
+    setLoading(true);
+    gestanteService
+      .obter(id)
       .then((res) => setG(res.data))
-      .catch((err) => addToast(extractError(err), 'danger'))
-      .finally(() => setLoading(false))
-  }, [addToast, id])
+      .catch((err) => addToast(extractError(err), "danger"))
+      .finally(() => setLoading(false));
+  }, [addToast, id]);
 
-  const semanas = g?.semanas_gestacao || '-'
-  const dpp = g?.data_provavel_parto ? new Date(g.data_provavel_parto).toLocaleDateString('pt-BR') : '-'
-  const consultas = g?.consultas || []
-  const totalConsultas = consultas.length
-  const hoje = new Date()
-  const futuras = consultas.filter((c) => new Date(c.data) >= hoje)
-  const passadas = consultas.filter((c) => new Date(c.data) < hoje)
-  const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
+  const hoje = new Date();
+  const consultas = g?.consultas || [];
+  const futuras = consultas.filter((c) => {
+    const dataConsulta = new Date(c.data);
+
+    const dentroInicio = !dataInicio || dataConsulta >= new Date(dataInicio);
+
+    const dentroFim =
+      !dataFim || dataConsulta <= new Date(`${dataFim}T23:59:59`);
+
+    return dataConsulta >= hoje && dentroInicio && dentroFim;
+  });
+
+  const passadas = consultas.filter((c) => {
+    const dataConsulta = new Date(c.data);
+
+    const dentroInicio = !dataInicio || dataConsulta >= new Date(dataInicio);
+
+    const dentroFim =
+      !dataFim || dataConsulta <= new Date(`${dataFim}T23:59:59`);
+
+    return dataConsulta < hoje && dentroInicio && dentroFim;
+  });
+  const meses = [
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez",
+  ];
 
   return (
     <div className="p-4">
       <PageHeader
         icon="bi-heart-pulse"
-        title="Acompanhamento Pré-Natal"
-        subtitle={g?.nome}
+        title="Consultas Agendadas"
+        subtitle="Confira as próximas consultas pré-natais agendadas e o histórico de atendimentos."
         backRoute="/lista-gestantes"
       >
         <button
@@ -54,38 +86,52 @@ function AcompanhamentoGestante() {
 
       <hr />
 
-      <div className="row g-4 mb-4">
-        {[
-          {
-            icon: "bi-calendar-week",
-            color: "primary",
-            label: "Semanas de Gestação",
-            value: `${semanas} semanas`,
-          },
-          {
-            icon: "bi-calendar-event",
-            color: "success",
-            label: "Data Prevista do Parto",
-            value: dpp,
-          },
-          {
-            icon: "bi-clipboard-check",
-            color: "warning",
-            label: "Total de Consultas",
-            value: `${totalConsultas} consultas`,
-          },
-        ].map((c) => (
-          <div key={c.label} className="col-md-4">
-            <div className="card shadow-sm border-0 h-100">
-              <div className="card-body text-center">
-                <i className={`bi ${c.icon} fs-1 text-${c.color} mb-2`}></i>
-                <h6 className="fw-bold mb-0">{c.value}</h6>
-                <small className="text-muted">{c.label}</small>
-              </div>
-            </div>
-          </div>
-        ))}
+      <div className="card shadow-sm border-0 mb-4">
+  <div className="card-body">
+    <div className="row g-3">
+      <div className="col-md-6">
+        <label className="form-label fw-semibold">
+          Data Inicial
+        </label>
+
+        <input
+          type="date"
+          className="form-control"
+          value={dataInicio}
+          onChange={(e) => setDataInicio(e.target.value)}
+        />
       </div>
+
+      <div className="col-md-6">
+        <label className="form-label fw-semibold">
+          Data Final
+        </label>
+
+        <input
+          type="date"
+          className="form-control"
+          value={dataFim}
+          onChange={(e) => setDataFim(e.target.value)}
+        />
+      </div>
+
+      <div className="col-12 d-flex justify-content-end mt-2">
+        <button
+          type="button"
+          className="btn btn-outline-secondary"
+          onClick={() => {
+            setDataInicio("");
+            setDataFim("");
+          }}
+        >
+
+          <i className="bi bi-x-circle me-2"></i>
+          Limpar Filtros
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
       <div className="row g-4">
         <CardSection
@@ -182,4 +228,4 @@ function AcompanhamentoGestante() {
   );
 }
 
-export default AcompanhamentoGestante
+export default AcompanhamentoGestante;
