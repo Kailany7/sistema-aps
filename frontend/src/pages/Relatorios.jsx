@@ -38,7 +38,7 @@ function Relatorios() {
   }
 
   return (
-    <div className="container-fluid py-4 ps-md-5 pe-md-4" style={{ backgroundColor: '#f4f7fe', minHeight: '100vh' }}>
+    <div className="container-fluid py-4 ps-md-5 pe-md-4" style={{ minHeight: '100vh' }}>
       <div className="mx-auto" style={{ maxWidth: '1400px' }}>
         
         {/* HEADER */}
@@ -60,7 +60,7 @@ function Relatorios() {
             onClick={() => navigate('/dashboard')}
             className="shadow-sm bg-white"
           >
-            <ArrowLeft className="me-2" size={16} />
+            <ArrowLeft className="me-2" size={14} />
             Voltar
           </Button>
         </div>
