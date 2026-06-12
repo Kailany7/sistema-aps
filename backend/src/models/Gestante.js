@@ -95,9 +95,8 @@ const gestanteSchema = new mongoose.Schema(
     resumoClinico: String,
     historicoDoencas: String,
     estratificacaoRisco: {
-      type: String,
-      enum: ["alto", "medio", "baixo", "habitual"],
-      default: "habitual",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Risco",
     },
     documentos: [
       {

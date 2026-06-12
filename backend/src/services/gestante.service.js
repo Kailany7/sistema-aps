@@ -1,12 +1,7 @@
 const Gestante = require("../models/Gestante");
+const Risco = require("../models/Risco");
 
-const mapRisco = {
-  Baixo: "baixo",
-  Intermediário: "medio",
-  Alto: "alto",
-};
-
-function mapearDados(body) {
+async function mapearDados(body) {
   const dados = {
     nome: body.nome,
     cpf: body.cpf,
@@ -24,9 +19,12 @@ function mapearDados(body) {
   if (body.gestacoes) dados.num_gestacoes = body.gestacoes;
   if (body.partos) dados.num_partos = body.partos;
   if (body.abortos) dados.num_abortos = body.abortos;
-  if (body.resumoClinico) dados.resumo_clinico = body.resumoClinico;
-  if (body.historicoDoencas) dados.historico_doencas = body.historicoDoencas;
-  if (body.risco) dados.estratificacao_risco = mapRisco[body.risco] || "habitual";
+  if (body.resumoClinico) dados.resumoClinico = body.resumoClinico;
+  if (body.historicoDoencas) dados.historicoDoencas = body.historicoDoencas;
+  if (body.risco) {
+    const risco = await Risco.findById(body.risco);
+    if (risco) dados.estratificacaoRisco = risco._id;
+  }
 
   return dados;
 }
@@ -35,19 +33,19 @@ const criar = async (dados) => {
   const existente = await Gestante.findOne({ cpf: dados.cpf });
   if (existente) throw { status: 409, message: "CPF já cadastrado" };
 
-  const gestante = await Gestante.create(mapearDados(dados));
+  const gestante = await Gestante.create(await mapearDados(dados));
   return gestante;
 };
 
 const listar = async (filtros = {}) => {
   const query = {};
   if (filtros.nome) query.nome = { $regex: filtros.nome, $options: "i" };
-  if (filtros.risco) query.estratificacao_risco = mapRisco[filtros.risco];
-  return Gestante.find(query).populate("referencias");
+  if (filtros.risco) query.estratificacaoRisco = filtros.risco;
+  return Gestante.find(query).populate("referencias").populate("estratificacaoRisco");
 };
 
 const obter = async (id) => {
-  const gestante = await Gestante.findById(id).populate("referencias");
+  const gestante = await Gestante.findById(id).populate("referencias").populate("estratificacaoRisco");
   if (!gestante) throw { status: 404, message: "Gestante não encontrada" };
   return gestante;
 };
@@ -56,7 +54,7 @@ const atualizar = async (id, dados) => {
   const gestante = await Gestante.findById(id);
   if (!gestante) throw { status: 404, message: "Gestante não encontrada" };
 
-  Object.assign(gestante, mapearDados(dados));
+  Object.assign(gestante, await mapearDados(dados));
   return gestante.save();
 };
 

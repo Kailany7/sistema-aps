@@ -4,11 +4,10 @@ import { gestanteService, riscoService } from '../services'
 import PageHeader from '../components/PageHeader'
 import AsyncContent from '../components/AsyncContent'
 
-const riscoLabel = { baixo: 'Baixo', medio: 'Intermediário', alto: 'Alto', habitual: 'Baixo' }
-
 function riscoStyle(risco) {
-  if (risco === 'Alto') return { borderColor: '#dc3545', badgeClass: 'bg-danger', color: 'danger' }
-  if (risco === 'Intermediário') return { borderColor: '#ffc107', badgeClass: 'bg-warning text-dark', color: 'warning' }
+  const v = risco?.valor
+  if (v === 'Alto') return { borderColor: '#dc3545', badgeClass: 'bg-danger', color: 'danger' }
+  if (v === 'Intermediário') return { borderColor: '#ffc107', badgeClass: 'bg-warning text-dark', color: 'warning' }
   return { borderColor: '#28a745', badgeClass: 'bg-success', color: 'success' }
 }
 
@@ -29,7 +28,7 @@ function ListaGestantes() {
 
   const filtradas = gestantes.filter((g) => {
     const nome = g.nome?.toLowerCase().includes(busca.toLowerCase())
-    const risco = !filtroRisco || riscoLabel[g.estratificacao_risco] === filtroRisco
+    const risco = !filtroRisco || g.estratificacaoRisco?._id === filtroRisco
     return nome && risco
   })
 
@@ -56,7 +55,7 @@ function ListaGestantes() {
               <select className="form-select" value={filtroRisco} onChange={(e) => setFiltroRisco(e.target.value)}>
                 <option value="">Todos os riscos</option>
                 {riscos.map((r) => (
-                  <option key={r._id} value={r.valor}>{r.rotulo}</option>
+                  <option key={r._id} value={r._id}>{r.rotulo}</option>
                 ))}
               </select>
             </div>
@@ -67,8 +66,8 @@ function ListaGestantes() {
       <AsyncContent loading={loading} empty={filtradas.length === 0} emptyMessage="Nenhuma gestante encontrada">
         <div className="row g-3">
           {filtradas.map((g) => {
-            const risco = riscoLabel[g.estratificacao_risco] || 'Baixo'
-            const { borderColor, badgeClass } = riscoStyle(risco)
+            const risco = g.estratificacaoRisco?.rotulo || g.estratificacaoRisco?.valor || 'Baixo'
+            const { borderColor, badgeClass } = riscoStyle(g.estratificacaoRisco)
             return (
               <div className="col-12" key={g._id}>
                 <div className="consulta-card d-flex align-items-start gap-3" style={{ cursor: 'pointer', borderLeft: `4px solid ${borderColor}` }}

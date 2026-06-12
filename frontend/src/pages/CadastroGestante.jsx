@@ -149,7 +149,7 @@ function CadastroGestante() {
             <label className="form-label">Estratificação de Risco</label>
             <select name="risco" className="form-select" value={form.risco} onChange={onFieldChange}>
               <option value="">Selecione o nível de risco...</option>
-              {riscos.map((r) => (<option key={r._id} value={r.valor}>{r.rotulo}</option>))}
+              {riscos.map((r) => (<option key={r._id} value={r._id}>{r.rotulo}</option>))}
             </select>
           </div>
           <div className="mb-3">

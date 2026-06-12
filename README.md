@@ -114,23 +114,7 @@ MongoDB conectado com sucesso
 
 > O servidor reinicia automaticamente quando você altera arquivos (nodemon).
 
-### 7. Popular o banco com dados iniciais
-
-Com o MongoDB rodando, execute em outro terminal:
-
-```bash
-cd backend
-node initial.js
-```
-
-Isso cria no banco:
-- 4 unidades de saúde (USF Alto Branco, USF São José, etc.)
-- 3 níveis de risco (Baixo, Intermediário, Alto)
-- 6 gestantes fictícias (2 de cada nível de risco)
-
-> Execute `node initial.js` sempre que quiser resetar o banco para o estado inicial.
-
-### 8. Iniciar o Frontend
+### 7. Iniciar o Frontend
 
 No terminal 2:
 
@@ -175,7 +159,6 @@ sistema-aps/
 │   │   ├── services/    # Lógica de negócio
 │   │   ├── app.js       # Configuração do Express
 │   │   └── index.js     # Entry point
-│   ├── initial.js       # Script para popular o banco
 │   ├── .env.example     # Exemplo de variáveis de ambiente
 │   └── package.json
 ├── frontend/
@@ -201,7 +184,6 @@ sistema-aps/
 |---|---|
 | `npm run dev` | Inicia o servidor com nodemon (desenvolvimento) |
 | `npm start` | Inicia o servidor sem nodemon |
-| `node initial.js` | Popula o banco com dados iniciais |
 
 ### Frontend
 

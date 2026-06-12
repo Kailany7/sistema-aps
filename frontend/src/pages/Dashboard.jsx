@@ -45,9 +45,10 @@ function Dashboard() {
   }
 
   function riscoBadgeClass(risco) {
-    if (risco === 'alto') return 'bg-danger'
-    if (risco === 'medio') return 'bg-warning text-dark'
-    if (risco === 'baixo') return 'bg-success'
+    const v = risco?.valor?.toLowerCase()
+    if (v === 'alto') return 'bg-danger'
+    if (v === 'intermediário' || v === 'medio') return 'bg-warning text-dark'
+    if (v === 'baixo') return 'bg-success'
     return 'bg-secondary'
   }
 
@@ -132,7 +133,7 @@ function Dashboard() {
                   >
                     <div className="flex-shrink-0">
                       <span className={`risco-badge ${riscoBadgeClass(g.estratificacaoRisco)}`}>
-                        {g.estratificacaoRisco}
+                        {g.estratificacaoRisco?.rotulo || g.estratificacaoRisco?.valor || "N/A"}
                       </span>
                     </div>
                     <div className="flex-grow-1">
