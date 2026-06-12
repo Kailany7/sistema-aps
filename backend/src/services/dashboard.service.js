@@ -1,4 +1,5 @@
 const Gestante = require("../models/Gestante");
+const Consulta = require("../models/Consulta");
 const Referencia = require("../models/Referencia");
 const Risco = require("../models/Risco");
 
@@ -13,28 +14,15 @@ const obterDados = async () => {
     estratificacaoRisco: riscoAlto?._id,
   });
 
-  const consultasRecentes = await Gestante.aggregate([
-    { $unwind: "$consultas" },
-    { $sort: { "consultas.data": -1 } },
-    { $limit: 10 },
-    {
-      $project: {
-        _id: 0,
-        gestanteNome: "$nome",
-        gestanteId: "$_id",
-        data: "$consultas.data",
-        tipo: "$consultas.tipo",
-        profissional: "$consultas.profissional",
-        semanaGestacional: "$consultas.semanaGestacional",
-      },
-    },
-  ]);
+  const consultasRecentes = await Consulta.find()
+    .populate("gestante_id", "nome")
+    .sort({ data: -1 })
+    .limit(10)
+    .lean();
 
-  const consultasAgendadas = await Gestante.aggregate([
-    { $unwind: "$consultas" },
-    { $match: { "consultas.data": { $gte: hoje } } },
-    { $count: "total" },
-  ]);
+  const consultasAgendadas = await Consulta.countDocuments({
+    data: { $gte: hoje },
+  });
 
   const alertasRisco = await Gestante.find(
     { estratificacaoRisco: riscoAlto?._id },
@@ -44,8 +32,16 @@ const obterDados = async () => {
   return {
     totalGestantes,
     altoRisco,
-    consultasAgendadas: consultasAgendadas[0]?.total || 0,
-    consultasRecentes,
+    consultasAgendadas,
+    consultasRecentes: consultasRecentes.map((c) => ({
+      consultaId: c._id,
+      gestanteNome: c.gestante_id?.nome,
+      gestanteId: c.gestante_id?._id,
+      data: c.data,
+      tipo: c.tipo,
+      profissional: c.profissional,
+      semanaGestacional: c.semanaGestacional,
+    })),
     alertasRisco,
   };
 };

@@ -1,28 +1,47 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { consultaService } from "../services";
+import { useToast } from "../contexts/ToastContext";
+import { extractError } from "../utils/errors";
 import PageHeader from "../components/PageHeader";
 
 function NovaConsulta() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { addToast } = useToast();
+  const [form, setForm] = useState({
+    data: "",
+    tipo: "",
+    profissional: "",
+    semanaGestacional: "",
+    peso: "",
+    pressaoArterial: "",
+    observacoes: "",
+  });
 
-  function handleSubmit(e) {
+  function handleChange(e) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  }
+
+  async function handleSubmit(e) {
     e.preventDefault();
-
-    // futura lógica de salvar consulta
-
-    alert("Consulta salva com sucesso!");
+    try {
+      await consultaService.criar({ gestanteId: id, ...form });
+      addToast("Consulta salva com sucesso!", "success");
+      navigate(`/acompanhamento-gestante/${id}`);
+    } catch (err) {
+      addToast(extractError(err), "danger");
+    }
   }
 
   return (
     <div className="p-4">
-      {/* Título e botão de voltar */}
       <div className="d-flex justify-content-between align-items-start">
         <PageHeader
           icon="bi-clipboard-plus"
           title="Registrar Nova Consulta"
           subtitle="Preencha os dados da consulta pré-natal."
         />
-
         <button
           className="btn btn-outline-secondary"
           onClick={() => navigate(`/acompanhamento-gestante/${id}`)}
@@ -44,116 +63,109 @@ function NovaConsulta() {
         />
 
         <div className="p-4">
-          {/* Formulário */}
           <form onSubmit={handleSubmit}>
             <div className="row g-4">
-              {/* Nome da gestante */}
-              <div className="col-md-6">
-                <label className="form-label fw-semibold">
-                  Nome da Gestante *
-                </label>
-                <input
-                  type="text"
-                  className="form-control form-control-lg"
-                  placeholder="Nome completo da gestante"
-                  required
-                />
-              </div>
-
-              {/* CPF da gestante */}
-              <div className="col-md-6">
-                <label className="form-label fw-semibold">
-                  CPF da Gestante *
-                </label>
-                <input
-                  type="text"
-                  className="form-control form-control-lg"
-                  placeholder="Ex: 123.456.789-00"
-                  required
-                />
-              </div>
-
-              {/* Idade da gestante */}
-              <div className="col-md-6">
-                <label className="form-label fw-semibold">
-                  Idade da Gestante *
-                </label>
-                <input
-                  type="number"
-                  className="form-control form-control-lg"
-                  placeholder="Ex: 25"
-                  required
-                />
-              </div>
-
-              {/* Idade gestacional */}
-              <div className="col-md-6">
-                <label className="form-label fw-semibold">
-                  Idade Gestacional (semanas) *
-                </label>
-                <input
-                  type="number"
-                  className="form-control form-control-lg"
-                  placeholder="Ex: 32"
-                  required
-                />
-              </div>
-
-              {/* Data */}
               <div className="col-md-6">
                 <label className="form-label fw-semibold">
                   Data da Consulta *
                 </label>
-
                 <input
                   type="date"
+                  name="data"
                   className="form-control form-control-lg"
                   required
+                  value={form.data}
+                  onChange={handleChange}
                 />
               </div>
 
-              {/* Tipo */}
               <div className="col-md-6">
                 <label className="form-label fw-semibold">
                   Tipo de Consulta *
                 </label>
-
-                <select className="form-select form-select-lg" required>
+                <select
+                  name="tipo"
+                  className="form-select form-select-lg"
+                  required
+                  value={form.tipo}
+                  onChange={handleChange}
+                >
                   <option value="">Selecione...</option>
-
                   <option>Pré-Natal</option>
-
                   <option>Retorno</option>
-
                   <option>Emergência</option>
                 </select>
               </div>
 
-              {/* Profissional */}
-              <div className="col-12">
-                <label className="form-label fw-semibold">Profissional *</label>
-
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">
+                  Idade Gestacional (semanas)
+                </label>
                 <input
-                  type="text"
-                  placeholder="Nome do profissional"
+                  type="number"
+                  name="semanaGestacional"
                   className="form-control form-control-lg"
-                  required
+                  placeholder="Ex: 32"
+                  value={form.semanaGestacional}
+                  onChange={handleChange}
                 />
               </div>
 
-              {/* Observações */}
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">Peso (kg)</label>
+                <input
+                  type="number"
+                  step="0.1"
+                  name="peso"
+                  className="form-control form-control-lg"
+                  placeholder="Ex: 68.5"
+                  value={form.peso}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">
+                  Pressão Arterial
+                </label>
+                <input
+                  type="text"
+                  name="pressaoArterial"
+                  className="form-control form-control-lg"
+                  placeholder="Ex: 120/80"
+                  value={form.pressaoArterial}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="col-md-6">
+                <label className="form-label fw-semibold">
+                  Profissional *
+                </label>
+                <input
+                  type="text"
+                  name="profissional"
+                  placeholder="Nome do profissional"
+                  className="form-control form-control-lg"
+                  required
+                  value={form.profissional}
+                  onChange={handleChange}
+                />
+              </div>
+
               <div className="col-12">
                 <label className="form-label fw-semibold">Observações</label>
-
                 <textarea
+                  name="observacoes"
                   rows={5}
                   placeholder="Observações gerais, caso haja alguma informação adicional relevante para a consulta."
                   className="form-control form-control-lg"
+                  value={form.observacoes}
+                  onChange={handleChange}
                 ></textarea>
               </div>
             </div>
 
-            {/* Botões */}
             <div className="d-flex justify-content-end gap-3 mt-5">
               <button
                 type="button"

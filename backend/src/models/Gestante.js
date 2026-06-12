@@ -1,25 +1,5 @@
 const mongoose = require("mongoose");
 
-const consultaSchema = new mongoose.Schema(
-  {
-    data: { type: Date, required: true },
-    tipo: String,
-    profissional: String,
-    semanaGestacional: Number,
-    peso: Number,
-    pressaoArterial: String,
-    batimentosFetais: Number,
-    alturaUterina: Number,
-    examesSolicitados: [String],
-    observacoes: String,
-    usuario_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  },
-  { timestamps: true },
-);
-
 // DADOS PESSOAIS
 const gestanteSchema = new mongoose.Schema(
   {
@@ -106,7 +86,12 @@ const gestanteSchema = new mongoose.Schema(
         enviadoEm: { type: Date, default: Date.now },
       },
     ],
-    consultas: [consultaSchema],
+    consultas: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Consulta",
+      },
+    ],
     referencias: [
       {
         type: mongoose.Schema.Types.ObjectId,

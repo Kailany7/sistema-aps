@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 
 const menuItems = [
   { icon: 'bi-house-door', label: 'Início', route: '/dashboard' },
   { icon: 'bi-person-plus', label: 'Cadastro de Gestantes', route: '/cadastro-gestante' },
   { icon: 'bi-people', label: 'Lista de Gestantes', route: '/lista-gestantes' },
-  { icon: 'bi-heart-pulse', label: 'Consultas Agendadas', route: '/acompanhamento-gestante/1' },
+  { icon: 'bi-heart-pulse', label: 'Consultas Agendadas', route: '/consultas-agendadas' },
   { icon: 'bi-send', label: 'Encaminhamentos', route: '/encaminhamentos' },
   { icon: 'bi-graph-up', label: 'Relatórios', route: '/relatorios' },
 ]
@@ -13,6 +14,12 @@ const menuItems = [
 function MainLayout() {
   const [collapsed, setCollapsed] = useState(false)
   const navigate = useNavigate()
+  const { logout } = useAuth()
+
+  function handleLogout() {
+    logout()
+    navigate('/login', { replace: true })
+  }
 
   return (
     <div className="d-flex vh-100" style={{ overflow: 'hidden' }}>
@@ -53,7 +60,7 @@ function MainLayout() {
         <div className="sidebar-footer p-3">
           <button
             className="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2 sair-btn"
-            onClick={() => navigate('/login')}
+            onClick={handleLogout}
           >
             <i className="bi bi-box-arrow-right"></i>
             {!collapsed && <span>Sair</span>}

@@ -67,12 +67,15 @@ function AcompanhamentoGestante() {
 
   return (
     <div className="p-4">
-      <PageHeader
-        icon="bi-heart-pulse"
-        title="Consultas Agendadas"
-        subtitle="Confira as próximas consultas pré-natais agendadas e o histórico de atendimentos."
-        backRoute="/lista-gestantes"
-      >
+      <div className="d-flex justify-content-between align-items-start">
+        <div>
+          <PageHeader
+            icon="bi-heart-pulse"
+            title={g ? g.nome : "Carregando..."}
+            subtitle="Confira as próximas consultas pré-natais agendadas e o histórico de atendimentos."
+            backRoute="/lista-gestantes"
+          />
+        </div>
         <button
           className="btn btn-primary"
           onClick={() =>
@@ -82,56 +85,43 @@ function AcompanhamentoGestante() {
           <i className="bi bi-plus-lg me-1"></i>
           Nova Consulta
         </button>
-      </PageHeader>
+      </div>
 
       <hr />
 
-      <div className="card shadow-sm border-0 mb-4">
-  <div className="card-body">
-    <div className="row g-3">
-      <div className="col-md-6">
-        <label className="form-label fw-semibold">
-          Data Inicial
-        </label>
-
-        <input
-          type="date"
-          className="form-control"
-          value={dataInicio}
-          onChange={(e) => setDataInicio(e.target.value)}
-        />
+      <div className="card shadow-sm border-0 mb-4 card-top-blue">
+        <div className="card-body">
+          <div className="row g-3 align-items-end">
+            <div className="col-md-5">
+              <label className="form-label fw-semibold small text-muted mb-1">
+                <i className="bi bi-calendar3 me-1"></i>Data Inicial
+              </label>
+              <input
+                type="date"
+                className="form-control"
+                value={dataInicio}
+                onChange={(e) => setDataInicio(e.target.value)}
+              />
+            </div>
+            <div className="col-md-5">
+              <label className="form-label fw-semibold small text-muted mb-1">
+                <i className="bi bi-calendar3 me-1"></i>Data Final
+              </label>
+              <input
+                type="date"
+                className="form-control"
+                value={dataFim}
+                onChange={(e) => setDataFim(e.target.value)}
+              />
+            </div>
+            <div className="col-md-2 d-flex gap-2 align-items-end">
+              <button className="btn btn-outline-secondary" onClick={() => { setDataInicio(""); setDataFim("") }}>
+                <i className="bi bi-x-circle"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div className="col-md-6">
-        <label className="form-label fw-semibold">
-          Data Final
-        </label>
-
-        <input
-          type="date"
-          className="form-control"
-          value={dataFim}
-          onChange={(e) => setDataFim(e.target.value)}
-        />
-      </div>
-
-      <div className="col-12 d-flex justify-content-end mt-2">
-        <button
-          type="button"
-          className="btn btn-outline-secondary"
-          onClick={() => {
-            setDataInicio("");
-            setDataFim("");
-          }}
-        >
-
-          <i className="bi bi-x-circle me-2"></i>
-          Limpar Filtros
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
 
       <div className="row g-4">
         <CardSection
@@ -151,6 +141,9 @@ function AcompanhamentoGestante() {
                   <div
                     key={i}
                     className="consulta-card d-flex justify-content-between align-items-center"
+                    role="button"
+                    onClick={() => navigate(`/consulta/${c._id}`)}
+                    style={{ cursor: 'pointer' }}
                   >
                     <div className="d-flex align-items-center gap-3">
                       <div className="consulta-date text-center">
@@ -166,12 +159,7 @@ function AcompanhamentoGestante() {
                         <p className="mb-0 mt-1 small">{c.profissional}</p>
                       </div>
                     </div>
-                    <button
-                      className="btn btn-sm btn-outline-primary rounded-circle"
-                      title="Ver detalhes"
-                    >
-                      <i className="bi bi-chevron-right"></i>
-                    </button>
+                    <i className="bi bi-chevron-right text-muted"></i>
                   </div>
                 );
               })}
@@ -194,6 +182,9 @@ function AcompanhamentoGestante() {
                 <div
                   key={i}
                   className="consulta-card d-flex justify-content-between align-items-center"
+                  role="button"
+                  onClick={() => navigate(`/consulta/${c._id}`)}
+                  style={{ cursor: 'pointer' }}
                 >
                   <div className="d-flex align-items-center gap-3">
                     <div className="consulta-date text-center">
@@ -212,12 +203,7 @@ function AcompanhamentoGestante() {
                       </small>
                     </div>
                   </div>
-                  <button
-                    className="btn btn-sm btn-outline-success rounded-circle"
-                    title="Ver detalhes"
-                  >
-                    <i className="bi bi-chevron-right"></i>
-                  </button>
+                  <i className="bi bi-chevron-right text-muted"></i>
                 </div>
               ))}
             </div>

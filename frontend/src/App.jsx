@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
 import Login from './pages/Login'
 import MainLayout from './pages/MainLayout'
 import Dashboard from './pages/Dashboard'
@@ -10,24 +11,31 @@ import ListaEncaminhamentos from './pages/ListaEncaminhamentos'
 import NovoEncaminhamento from './pages/NovoEncaminhamento'
 import DetalheEncaminhamento from './pages/DetalheEncaminhamento'
 import Relatorios from './pages/Relatorios'
+import ConsultasAgendadas from './pages/ConsultasAgendadas'
+import DetalheConsulta from './pages/DetalheConsulta'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route element={<MainLayout />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/cadastro-gestante" element={<CadastroGestante />} />
-        <Route path="/lista-gestantes" element={<ListaGestantes />} />
-        <Route path="/acompanhamento-gestante/:id" element={<AcompanhamentoGestante />} />
-        <Route path="/acompanhamento-gestante/:id/nova-consulta" element={<NovaConsulta />} />
-        <Route path="/encaminhamentos" element={<ListaEncaminhamentos />} />
-        <Route path="/novo-encaminhamento" element={<NovoEncaminhamento />} />
-        <Route path="/encaminhamento/:id" element={<DetalheEncaminhamento />} />
-        <Route path="/relatorios" element={<Relatorios />} />
-      </Route>
-      <Route path="*" element={<Navigate to="/login" replace />} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/cadastro-gestante" element={<CadastroGestante />} />
+          <Route path="/lista-gestantes" element={<ListaGestantes />} />
+          <Route path="/acompanhamento-gestante/:id" element={<AcompanhamentoGestante />} />
+          <Route path="/acompanhamento-gestante/:id/nova-consulta" element={<NovaConsulta />} />
+          <Route path="/consultas-agendadas" element={<ConsultasAgendadas />} />
+          <Route path="/consulta/:id" element={<DetalheConsulta />} />
+          <Route path="/encaminhamentos" element={<ListaEncaminhamentos />} />
+          <Route path="/novo-encaminhamento" element={<NovoEncaminhamento />} />
+          <Route path="/encaminhamento/:id" element={<DetalheEncaminhamento />} />
+          <Route path="/relatorios" element={<Relatorios />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </AuthProvider>
   )
 }
 

@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
@@ -25,7 +26,9 @@ const login = async ({ login, senha }) => {
   const user = await User.findOne({ login });
   if (!user) throw { status: 401, message: "Credenciais inválidas" };
 
-  const valid = await bcrypt.compare(senha, user.senha_hash);
+  if (!user.ativo) throw { status: 401, message: "Usuário desativado" };
+
+  const valid = await user.compararSenha(senha);
   if (!valid) throw { status: 401, message: "Credenciais inválidas" };
 
   const token = jwt.sign(
@@ -40,4 +43,4 @@ const login = async ({ login, senha }) => {
   };
 };
 
-module.exports = { login };
+module.exports = { register, login };

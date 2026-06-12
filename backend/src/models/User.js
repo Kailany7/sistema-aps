@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
@@ -20,10 +19,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Senha é obrigatória'],
     },
-
-    // RELACIONAMENTO 1 - N COM GESTANTE, ENCAMINHAMENTO E CONTRAREFERENCIA
-    // O _id gerado aqui automaticamente pelo MongoDB é o usuario_id
-    // que vai aparecer dentro de Gestante, Encaminhamento e ContraReferencia
+    ativo: {
+      type: Boolean,
+      default: true,
+    },
     perfil: {
       type: String,
       required: [true, 'Perfil é obrigatório'],
