@@ -1,5 +1,6 @@
 const Gestante = require("../models/Gestante");
 const Risco = require("../models/Risco");
+const UnidadeSaude = require("../models/UnidadeSaude");
 
 async function mapearDados(body) {
   const dados = {
@@ -26,6 +27,14 @@ async function mapearDados(body) {
     if (risco) dados.estratificacaoRisco = risco._id;
   }
 
+  if (body.unidade) {
+    const unidade = await UnidadeSaude.findOne({ nome: body.unidade });
+    if (unidade) {
+      dados.macro = unidade.macro;
+      dados.municipio = unidade.municipio;
+    }
+  }
+
   return dados;
 }
 
@@ -37,29 +46,29 @@ const criar = async (dados) => {
   return gestante;
 };
 
-const listar = async (filtros = {}) => {
-  const query = {};
+const listar = async (filtros = {}, filtroAcesso = {}) => {
+  const query = { ...filtroAcesso };
   if (filtros.nome) query.nome = { $regex: filtros.nome, $options: "i" };
   if (filtros.risco) query.estratificacaoRisco = filtros.risco;
   return Gestante.find(query).populate("referencias").populate("estratificacaoRisco");
 };
 
-const obter = async (id) => {
-  const gestante = await Gestante.findById(id).populate("referencias").populate("estratificacaoRisco");
+const obter = async (id, filtroAcesso = {}) => {
+  const gestante = await Gestante.findOne({ _id: id, ...filtroAcesso }).populate("referencias").populate("estratificacaoRisco");
   if (!gestante) throw { status: 404, message: "Gestante não encontrada" };
   return gestante;
 };
 
-const atualizar = async (id, dados) => {
-  const gestante = await Gestante.findById(id);
+const atualizar = async (id, dados, filtroAcesso = {}) => {
+  const gestante = await Gestante.findOne({ _id: id, ...filtroAcesso });
   if (!gestante) throw { status: 404, message: "Gestante não encontrada" };
 
   Object.assign(gestante, await mapearDados(dados));
   return gestante.save();
 };
 
-const remover = async (id) => {
-  const gestante = await Gestante.findByIdAndDelete(id);
+const remover = async (id, filtroAcesso = {}) => {
+  const gestante = await Gestante.findOneAndDelete({ _id: id, ...filtroAcesso });
   if (!gestante) throw { status: 404, message: "Gestante não encontrada" };
   return gestante;
 };

@@ -7,15 +7,17 @@ module.exports = (req, res, next) => {
     const secret = process.env.JWT_SECRET || "sua_chave_secreta";
     const decoded = jwt.verify(token, secret);
     req.user = decoded;
+
+    if (req.user.perfil === "medico") {
+      req.filtroAcesso = {};
+    } else if (req.user.perfil === "enfermeiro") {
+      req.filtroAcesso = { macro: req.user.macro };
+    } else {
+      req.filtroAcesso = { municipio: req.user.municipio };
+    }
+
     next();
   } catch {
     res.status(401).json({ erro: "Token inválido" });
   }
 };
-
-// Como usar nas rotas da Kailany e Leticia:
-/*const auth = require("../middleware/auth");
-router.post("/gestantes", auth, async (req, res) => {
-  const usuario_id = req.user.id; // <- pega o id de quem está logado
-  // ...
-});/*/

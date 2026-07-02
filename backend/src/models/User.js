@@ -26,13 +26,15 @@ const userSchema = new mongoose.Schema(
     perfil: {
       type: String,
       required: [true, 'Perfil é obrigatório'],
-      enum: ['medico', 'enfermeiro', 'agente_saude'],
+      enum: ['medico', 'enfermeiro', 'municipio'],
     },
     unidade_saude: {
       type: String,
       required: [true, 'Unidade de saúde é obrigatória'],
       trim: true,
     },
+    macro: { type: String, trim: true },
+    municipio: { type: String, trim: true },
   },
   { timestamps: true }
 );
