@@ -68,6 +68,8 @@ const gestanteSchema = new mongoose.Schema(
       required: [true, "Profissional responsável é obrigatório"],
       trim: true,
     },
+    macro: { type: String, trim: true },
+    municipio: { type: String, trim: true },
     usuario_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
